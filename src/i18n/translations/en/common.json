@@ -1,0 +1,21 @@
+{
+	"cancel": "Cancel",
+	"connecting": "Connecting...",
+	"dark": "Dark",
+	"data": "Data",
+	"download": "Download",
+	"error": "Error",
+	"errorConnectingWs": "Error connecting to your device. Please check your connection and try again.",
+	"invalidAlphanumeric": "Value should only be composed of alphanumeric characters (letters and numbers)",
+	"language": "Language",
+	"light": "Light",
+	"password": "Password",
+	"reset": "Reset",
+	"save": "Save",
+	"system": "System",
+	"theme": "Theme",
+	"unsaved_changes": "Are you sure you want to leave? You have unsaved changes",
+	"upload": "Upload",
+	"username": "Username",
+	"welcome": "Welcome to your new app!"
+}

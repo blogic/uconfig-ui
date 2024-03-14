@@ -1,0 +1,21 @@
+{
+	"compatibilitySecurity": "Prioriser la compatibilité",
+	"compatibilitySecurityExplanation": "Utilisez des algorithmes de sécurité compatibles avec la plupart des appareils",
+	"confirmTitle": "Confirmer les informations de configuration",
+	"devicePassword": "Mot de passe de l'appareil",
+	"deviceTitle": "Configuration de l'appareil",
+	"hostname": "Nom d'hôte",
+	"lanExplanation": "Vous pouvez maintenant configurer votre réseau local. Veuillez choisir une adresse de sous-réseau et décider si vous souhaitez activer DHCP (nous vous recommandons de l'activer)",
+	"maxSecurity": "Sécurité maximale",
+	"maxSecurityExplanation": "Utilisez le cryptage le plus récent et le plus sécurisé. Seuls les appareils récents pourront se connecter",
+	"next": "Suivant",
+	"save": "Terminer la configuration",
+	"security": "SÉCURITÉ",
+	"start": "Lancer la configuration",
+	"title": "La configuration initiale",
+	"welcomeExplanation": "Il vous sera maintenant demandé de saisir certaines informations dans le cadre de cette première configuration!",
+	"welcomeExplanation2": "Même si vous devez prendre le temps de saisir les meilleures informations possibles, vous pourrez ensuite modifier tout ce que vous avez défini lors de cette configuration de bienvenue.",
+	"welcomeTitle": "Bienvenue dans l'interface utilisateur de votre routeur",
+	"wifiPassword": "Mot de passe WiFi",
+	"wifiTitle": "Configuration WiFi"
+}

@@ -1,0 +1,22 @@
+{
+	"appVersion": "Version de l'application",
+	"description": "Ici, vous pouvez gérer les paramètres système de votre routeur",
+	"firmware": "Micrologiciel",
+	"firmwareUpgrade": "Mise à jour du firmware",
+	"firmwareUpgradeExplanation": "Veuillez choisir un fichier .bin de firmware compatible. Vous pourrez confirmer le hachage trouvé avant de procéder à la mise à niveau",
+	"firmwareVersion": "Version du firmware",
+	"hostname": "Nom d'hôte",
+	"kernel": "Noyau",
+	"load": "Charge",
+	"memoryUsed": "Mémoire utilisée",
+	"model": "Modèle",
+	"processor": "Processeur",
+	"restart": "Redémarrer",
+	"restartWarning": "Vous êtes sur le point de redémarrer votre routeur. Cela signifie que votre réseau pourrait être indisponible pendant quelques minutes.",
+	"systemInfo": "Informations système",
+	"target": "Cible",
+	"timezone": "Fuseau horaire",
+	"title": "Système",
+	"upgrade": "Améliorer",
+	"version": "Version"
+}

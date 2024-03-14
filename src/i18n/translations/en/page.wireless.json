@@ -1,0 +1,22 @@
+{
+	"compatibilitySecurity": "Prioritize Compatibility",
+	"compatibilitySecurityExplanation": "Use security algorithms that are compatible with most devices",
+	"createNew": "Create Network",
+	"createNewGuest": "Create Guest Network",
+	"createNewSsid": "Create New WiFi Network",
+	"description": "Here you can configure the wireless settings of your router",
+	"fiveGExplanation": "Supported by almost all devices 5 years old or more recent. Faster, but has less range",
+	"maxSecurity": "Maximum Security",
+	"maxSecurityExplanation": "Use the latest and most secure encryption. Only recent devices will be able to connect",
+	"password": "Password",
+	"security": "Security",
+	"sixGExplanation": "Not supported by older devices, should not be the only band used",
+	"ssid": "WiFi Name",
+	"ssidAlreadyExists": "This WiFi name is already being used",
+	"ssidExplanation": "Here you can modify your WiFi settings, including it's name and password. Careful: if you change your WiFi name you will need to manually connect to it",
+	"twoGExplanation": "Supported by almost all devices, old or modern. Supports the highest range",
+	"wifiBands": "Bands",
+	"wifiPassword": "WiFi Password",
+	"wifiTitle": "WiFi Network",
+	"wireless": "Wireless"
+}

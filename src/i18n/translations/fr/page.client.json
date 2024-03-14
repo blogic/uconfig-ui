@@ -1,0 +1,12 @@
+{
+	"blockClient": "Bloquer le client",
+	"blockClientDescription": "Déconnectez ce client de votre routeur et empêchez-le de se reconnecter",
+	"deviceDetails": "Détails de l'appareil",
+	"excellent": "Excellent",
+	"good": "Bon",
+	"ip_one": "Adresse IP",
+	"ip_other": "Adresses IP",
+	"noDeviceDetails": "Impossible d'obtenir plus de détails sur cet appareil",
+	"signalStrength": "Signal",
+	"weak": "Faible"
+}

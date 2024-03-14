@@ -1,0 +1,22 @@
+{
+	"appVersion": "APP Version",
+	"description": "Here you can manage system settings of your router",
+	"firmware": "Firmware",
+	"firmwareUpgrade": "Firmware Upgrade",
+	"firmwareUpgradeExplanation": "Please choose a compatible firmware .bin file. You will be able to confirm the hash found before doing the upgrade",
+	"firmwareVersion": "Firmware Version",
+	"hostname": "Host Name",
+	"kernel": "Kernel",
+	"load": "Load",
+	"memoryUsed": "Memory Used",
+	"model": "Model",
+	"processor": "Processor",
+	"restart": "Restart",
+	"restartWarning": "You are about to restart your router. This will mean your network might be unavailable for a few minutes.",
+	"systemInfo": "System Information",
+	"target": "Target",
+	"timezone": "Timezone",
+	"title": "System",
+	"upgrade": "Upgrade",
+	"version": "Version"
+}

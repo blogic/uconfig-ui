@@ -1,0 +1,22 @@
+{
+	"compatibilitySecurity": "Prioriser la compatibilité",
+	"compatibilitySecurityExplanation": "Utilisez des algorithmes de sécurité compatibles avec la plupart des appareils",
+	"createNew": "Créer un réseau",
+	"createNewGuest": "Créer un réseau d'invités",
+	"createNewSsid": "Créer un nouveau réseau WiFi",
+	"description": "Ici vous pouvez configurer les paramètres sans-fil de votre routeur",
+	"fiveGExplanation": "Pris en charge par presque tous les appareils de 5 ans ou plus récents. Plus rapide, mais a moins de portée",
+	"maxSecurity": "Sécurité maximale",
+	"maxSecurityExplanation": "Utilisez le cryptage le plus récent et le plus sécurisé. Seuls les appareils récents pourront se connecter",
+	"password": "Mot de passe",
+	"security": "SÉCURITÉ",
+	"sixGExplanation": "Non pris en charge par les appareils plus anciens, ne devrait pas être la seule bande utilisée",
+	"ssid": "Nom Wi-Fi",
+	"ssidAlreadyExists": "Ce nom WiFi est déjà utilisé",
+	"ssidExplanation": "Ici, vous pouvez modifier vos paramètres WiFi, y compris son nom et son mot de passe. Attention : si vous modifiez votre nom WiFi, vous devrez vous y connecter manuellement",
+	"twoGExplanation": "Pris en charge par presque tous les appareils, anciens ou modernes. Prend en charge la gamme la plus élevée",
+	"wifiBands": "Bandes",
+	"wifiPassword": "Mot de passe WiFi",
+	"wifiTitle": "Réseau WiFi",
+	"wireless": "Sans-fil"
+}

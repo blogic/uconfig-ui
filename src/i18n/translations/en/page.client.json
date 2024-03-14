@@ -1,0 +1,12 @@
+{
+	"blockClient": "Block Client",
+	"blockClientDescription": "Disconnect this client from your router and prevent them from connecting again",
+	"deviceDetails": "Device Details",
+	"excellent": "Excellent",
+	"good": "Good",
+	"ip_one": "IP Address",
+	"ip_other": "IP Addresses",
+	"noDeviceDetails": "Unable to obtain more details on this device",
+	"signalStrength": "Signal",
+	"weak": "Weak"
+}

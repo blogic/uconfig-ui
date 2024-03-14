@@ -1,0 +1,7 @@
+/src/assets
+/src/routeTree.gen.ts
+/node_modules
+/dist
+/icons
+.github
+vite.config.ts

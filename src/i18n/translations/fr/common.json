@@ -1,0 +1,21 @@
+{
+	"cancel": "Annuler",
+	"connecting": "Connexion...",
+	"dark": "Sombre",
+	"data": "Les données",
+	"download": "Télécharger",
+	"error": "Erreur",
+	"errorConnectingWs": "Erreur de connexion à votre appareil. Veuillez vérifier votre connexion et tentez de nouveau.",
+	"invalidAlphanumeric": "La valeur ne doit être composée que de caractères alphanumériques (lettres et chiffres)",
+	"language": "Langue",
+	"light": "Lumière",
+	"password": "Mot de passe",
+	"reset": "Réinitialiser",
+	"save": "Sauvegarder",
+	"system": "Système",
+	"theme": "Thème",
+	"unsaved_changes": "Êtes-vous sûr de vouloir quitter? Vous avez des changements non enregistrés",
+	"upload": "Télécharger",
+	"username": "Nom d'utilisateur",
+	"welcome": "Bienvenue à votre nouvel APP!"
+}
