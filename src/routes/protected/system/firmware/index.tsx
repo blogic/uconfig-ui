@@ -1,7 +1,7 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { getSystemInfoOptions } from 'api/queries/systemInfo';
+import { getBoardOptions } from 'api/queries/board';
 import { InformationTile } from 'components/InformationTile';
 import { NavigationTile } from 'components/NavigationTile';
 import { PageTitleBar } from 'layout/PageTitleBar';
@@ -9,7 +9,7 @@ import { PageTitleBar } from 'layout/PageTitleBar';
 const Component = () => {
   const { t } = useTranslation('system');
   const navigate = useNavigate();
-  const getInfo = useSuspenseQuery(getSystemInfoOptions());
+  const getInfo = useSuspenseQuery(getBoardOptions());
 
   return (
     <>

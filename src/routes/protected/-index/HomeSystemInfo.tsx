@@ -15,7 +15,7 @@ export const HomeSystemInfo = () => {
   const { data: boardInfo } = useSuspenseQuery(getBoardOptions());
 
   const memoryUsedPct =
-    Math.round(((boardInfo.memory.total - boardInfo.memory.available) / boardInfo.memory.total) * 100 * 100) / 100;
+    Math.round(((systemInfo.memory.total - systemInfo.memory.available) / systemInfo.memory.total) * 100 * 100) / 100;
   const navigate = useNavigate();
 
   const navigateToSystem = () => navigate({ to: '/protected/system' });
@@ -30,14 +30,14 @@ export const HomeSystemInfo = () => {
         onClick={navigateToSystem}
       />
       <StatDisplay
-        title={`${boardInfo.load[0]}%`}
+        title={`${systemInfo.load[0]}%`}
         description={tSystem('load')}
         className="bg-warning-300 dark:bg-warning-500"
         icon={<Cpu className="h-6 w-6 text-black dark:text-white" />}
         onClick={navigateToSystem}
       />
       <StatDisplay
-        title={new Date(boardInfo.localtime * 1000).toLocaleTimeString()}
+        title={new Date(systemInfo.localtime * 1000).toLocaleTimeString()}
         description={t('localtime')}
         className="bg-tertiary-300 dark:bg-tertiary-500"
         icon={<Clock className="h-6 w-6 text-black dark:text-white" />}
@@ -52,7 +52,7 @@ export const HomeSystemInfo = () => {
       />
       <StatDisplay
         className="col-span-2 bg-secondary-300 dark:bg-secondary-500"
-        title={systemInfo.model}
+        title={boardInfo.model}
         description={tSystem('model')}
         icon={<QrCode className="h-6 w-6 text-black dark:text-white" />}
         onClick={navigateToSystem}

@@ -18,7 +18,7 @@ const Component = () => {
   const { data: boardInfo } = useSuspenseQuery(getBoardOptions());
 
   const memoryUsedPct =
-    Math.round(((boardInfo.memory.total - boardInfo.memory.available) / boardInfo.memory.total) * 100 * 100) / 100;
+    Math.round(((systemInfo.memory.total - systemInfo.memory.available) / systemInfo.memory.total) * 100 * 100) / 100;
 
   return (
     <>
@@ -44,7 +44,7 @@ const Component = () => {
               </div>
             }
             // TODO: Temporary, remove once load can be used
-            description={`${boardInfo.load[0]}%`}
+            description={`${systemInfo.load[0]}%`}
             className="rounded-none"
           />
           <NavigationTile
@@ -54,7 +54,7 @@ const Component = () => {
                 <Clock className="ml-1  h-6 w-6 text-tertiary-500 dark:text-tertiary-300" />
               </div>
             }
-            description={new Date(boardInfo.localtime * 1000).toLocaleString()}
+            description={new Date(systemInfo.localtime * 1000).toLocaleString()}
             onClick={() => {
               navigate({
                 from: Route.fullPath,
@@ -67,7 +67,7 @@ const Component = () => {
         <div>
           <NavigationTile
             title={t('firmwareVersion')}
-            description={systemInfo.release.description}
+            description={boardInfo.release.description}
             onClick={() => {
               navigate({
                 from: Route.fullPath,
@@ -77,8 +77,8 @@ const Component = () => {
             className="rounded-b-none"
           />
           <NavigationTile
-            title={t('systemInfo')}
-            description={systemInfo.model}
+            title={t('boardInfo')}
+            description={boardInfo.model}
             onClick={() => {
               navigate({
                 from: Route.fullPath,

@@ -1,17 +1,17 @@
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { getSystemInfoOptions } from 'api/queries/systemInfo';
+import { getBoardOptions } from 'api/queries/board';
 import { InformationTile } from 'components/InformationTile';
 import { PageTitleBar } from 'layout/PageTitleBar';
 
 const Component = () => {
   const { t } = useTranslation('system');
-  const getInfo = useSuspenseQuery(getSystemInfoOptions());
+  const getInfo = useSuspenseQuery(getBoardOptions());
 
   return (
     <>
-      <PageTitleBar title={t('systemInfo')} />
+      <PageTitleBar title={t('boardInfo')} />
       <div className="space-y-4">
         <InformationTile title={t('hostname')} description={getInfo.data.hostname} />
         <div>
@@ -26,6 +26,6 @@ const Component = () => {
 export const Route = createFileRoute('/protected/system/systemInfo')({
   component: Component,
   beforeLoad: async ({ context }) => {
-    await context.queryClient.ensureQueryData(getSystemInfoOptions());
+    await context.queryClient.ensureQueryData(getBoardOptions());
   },
 });

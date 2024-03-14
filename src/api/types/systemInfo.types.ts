@@ -1,22 +1,20 @@
 export type SystemInfo = {
-  kernel: string;
-  /** Serial Number */
-  hostname: string;
-  /** CPU */
-  system: string;
-  model: string;
-  board_name: string;
-  rootfs_type: string;
-  release: {
-    distribution: string;
-    version: string;
-    revision: string;
-    target: string;
-    description: string;
+  /** UNIX timestamp */
+  localtime: number;
+  /** Uptime in seconds */
+  uptime: number;
+  load: [number, number, number];
+  memory: {
+    total: number;
+    free: number;
+    shared: number;
+    buffered: number;
+    available: number;
+    cached: number;
   };
 };
 
-export const DUMMY_SYSTEM_INFO: SystemInfo = {
+/*export const DUMMY_SYSTEM_INFO: SystemInfo = {
   kernel: '6.1.77',
   hostname: 'c4411ef52d53',
   system: 'ARMv8 Processor rev 4',
@@ -30,4 +28,4 @@ export const DUMMY_SYSTEM_INFO: SystemInfo = {
     target: 'mediatek/mt7622',
     description: 'OpenWrt SNAPSHOT r25206+8-d5e2177a6b',
   },
-};
+};*/

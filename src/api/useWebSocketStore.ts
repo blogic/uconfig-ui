@@ -4,6 +4,7 @@ import { Clients, DUMMY_CLIENTS } from './types/clients.types';
 import { Configuration } from './types/configurations.types';
 import { Ports } from './types/ports.types';
 import { SystemInfo } from './types/systemInfo.types';
+
 import {
   WebSocketApiActions,
   WebSocketCallback,
@@ -85,31 +86,39 @@ export type WebSocketStore = {
   status: WebSocketApiStatus;
   configuration?: object;
   eventListeners: WebSocketCallback[];
-  login: (req: { username: string; password: string; timeout?: number }) => Promise<{ result: 'success' | 'failure' }>;
+  
   addEventListeners: (callback: WebSocketCallback[]) => void;
+  get: (
+    payload: {
+      id: number;
+      action: string | WebSocketCallback['action'];
+    } & object,
+    extractFn: (response: any) => object | undefined,
+    timeout?: number,
+  ) => Promise<unknown>;
+  
+  login: (req: { username: string; password: string; }) => Promise<{ result: 'success' | 'failure' }>;
+  restart: (timeout?: number) => Promise<true | false>;
+  
   getConfigurationList: (timeout?: number) => Promise<{ configs: string[]; active: string }>;
   getCurrentConfiguration: (timeout?: number) => Promise<Configuration>;
   getSystemInfo: (timeout?: number) => Promise<SystemInfo>;
   getBoard: (timeout?: number) => Promise<Board>;
   getPorts: (timeout?: number) => Promise<Ports>;
   getClients: (timeout?: number) => Promise<Clients>;
-  restart: (timeout?: number) => Promise<'success' | 'failure'>;
 };
 
 export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
   const ws = new ReconnectingWebSocket({ url: import.meta.env.VITE_WS_URL });
 
   ws.onopen = () => {
-    set({
-      status: 'connected',
-    });
-
+    set({ status: 'connected' });
     const storedInformation = getStoredLoginInfo();
 
-    if (storedInformation) {
+    if (storedInformation)
       get().login(storedInformation);
-    }
   };
+
   ws.onmessage = (event) => {
     try {
       const callbacksToRemove = handleWebSocketMessage(event, ws, get().eventListeners);
@@ -122,15 +131,13 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
       // console.error(e);
     }
   };
+
   ws.onclose = () => {
-    set({
-      status: 'error',
-    });
+    set({ status: 'error' });
   };
+
   ws.onerror = () => {
-    set({
-      status: 'error',
-    });
+    set({ status: 'error' });
   };
 
   return {
@@ -141,24 +148,30 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
         eventListeners: [...state.eventListeners, ...events],
       }));
     },
-    login: async ({ username, password, timeout = 1000 * 5 }) =>
+
+    get: async (
+      payload: {
+        id: number;
+        action: string | WebSocketCallback['action'];
+      } & object,
+      extractFn: (response: any) => object | undefined,
+      timeout = 5 * 1000,
+    ) =>
       new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           reject(new Error(`Promise timed out after ${timeout} ms`));
         }, timeout);
         if (ws) {
-          const payload = WebSocketApiActions.user.login.getPayload(username, password);
           get().addEventListeners([
             {
               id: payload.id,
-              action: 'user',
-              callback: (msg) => {
+              action: payload.action as WebSocketCallback['action'],
+              callback: (msg: any) => {
                 clearTimeout(timer);
-                if (msg?.result === 'success') {
-                  resolve({ result: 'success' });
-                  storeLoginInfo({ username, password });
-                } else if (msg?.result === 'failure') {
-                  resolve({ result: 'failure' });
+                const extractedResponse = extractFn(msg);
+
+                if (extractedResponse) {
+                  resolve(extractedResponse);
                 } else {
                   reject(new Error('Not valid response'));
                 }
@@ -171,41 +184,35 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
           reject(new Error('No websocket connection'));
         }
       }),
-    getConfigurationList: async (
-      timeout = 1000 * 5,
-    ): Promise<{
-      configs: string[];
-      active: string;
-    }> =>
-      new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error(`Promise timed out after ${timeout} ms`));
-        }, timeout);
-        if (ws) {
-          const payload = WebSocketApiActions.config.getListPayload();
-          get().addEventListeners([
-            {
-              id: payload.id,
-              action: 'config',
-              callback: (msg) => {
-                clearTimeout(timer);
-                if (msg?.active && msg.configs) {
-                  resolve({
-                    active: msg.active,
-                    configs: msg.configs,
-                  });
-                } else {
-                  reject(new Error('Not valid response'));
-                }
-              },
-            },
-          ]);
-          ws.send(payload);
-        } else {
-          clearTimeout(timer);
-          reject(new Error('No websocket connection'));
-        }
+
+
+    login: async ({ username, password }) =>
+      get().get(WebSocketApiActions.user.login.getPayload(username, password), (response) => {
+        if (response?.result === 'success')
+          storeLoginInfo({ username, password });
+        return { result: response?.result };
       }),
+    
+    restart: async () =>
+      get().get(WebSocketApiActions.system.restart.getPayload(), (response) => {
+        return response?.result || false;
+      }),
+
+    getConfigurationList: async () =>
+      get().get(WebSocketApiActions.config.getListPayload(), (response) => {
+        if (response?.active && response.configs) {
+          return {
+            active: response.active,
+            configs: response.configs,
+          };
+        }
+
+        return undefined;
+      }) as Promise<{
+        configs: string[];
+        active: string;
+      }>,
+
     getCurrentConfiguration: async (timeout = 1000 * 5): Promise<Configuration> =>
       new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
@@ -233,87 +240,16 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
           reject(new Error('No websocket connection'));
         }
       }),
-    getSystemInfo: async (timeout = 1000 * 5): Promise<SystemInfo> =>
-      new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error(`Promise timed out after ${timeout} ms`));
-        }, timeout);
-        if (ws) {
-          const payload = WebSocketApiActions.system.getSystemInfo.getPayload();
-          get().addEventListeners([
-            {
-              id: payload.id,
-              action: 'system',
-              callback: (msg) => {
-                clearTimeout(timer);
-                if (msg?.info) {
-                  resolve(msg.info);
-                } else {
-                  reject(new Error('Not valid response'));
-                }
-              },
-            },
-          ]);
-          ws.send(payload);
-        } else {
-          clearTimeout(timer);
-          reject(new Error('No websocket connection'));
-        }
-      }),
-    getBoard: async (timeout = 1000 * 5): Promise<Board> =>
-      new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error(`Promise timed out after ${timeout} ms`));
-        }, timeout);
-        if (ws) {
-          const payload = WebSocketApiActions.system.getBoard.getPayload();
-          get().addEventListeners([
-            {
-              id: payload.id,
-              action: 'system',
-              callback: (msg) => {
-                clearTimeout(timer);
-                if (msg?.board) {
-                  resolve(msg.board);
-                } else {
-                  reject(new Error('Not valid response'));
-                }
-              },
-            },
-          ]);
-          ws.send(payload);
-        } else {
-          clearTimeout(timer);
-          reject(new Error('No websocket connection'));
-        }
-      }),
-    getPorts: async (timeout = 1000 * 5): Promise<Ports> =>
-      new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error(`Promise timed out after ${timeout} ms`));
-        }, timeout);
-        if (ws) {
-          const payload = WebSocketApiActions.system.getPorts.getPayload();
-          get().addEventListeners([
-            {
-              id: payload.id,
-              action: 'system',
-              callback: (msg) => {
-                clearTimeout(timer);
-                if (msg?.ports) {
-                  resolve(msg.ports);
-                } else {
-                  reject(new Error('Not valid response'));
-                }
-              },
-            },
-          ]);
-          ws.send(payload);
-        } else {
-          clearTimeout(timer);
-          reject(new Error('No websocket connection'));
-        }
-      }),
+
+    getSystemInfo: async () => 
+      get().get(WebSocketApiActions.system.getSystemInfo.getPayload(), (response) => response?.info) as Promise<SystemInfo>,
+
+    getBoard: async () => 
+      get().get(WebSocketApiActions.system.getBoard.getPayload(), (response) => response?.board) as Promise<Board>,
+
+    getPorts: async () => 
+      get().get(WebSocketApiActions.system.getPorts.getPayload(), (response) => response?.ports) as Promise<Ports>,
+
     getClients: async (timeout = 1000 * 5): Promise<Clients> =>
       new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
@@ -342,33 +278,7 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
           reject(new Error('No websocket connection'));
         }
       }),
-    restart: async (timeout = 1000 * 5) =>
-      new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error(`Promise timed out after ${timeout} ms`));
-        }, timeout);
-        if (ws) {
-          const payload = WebSocketApiActions.system.restart.getPayload();
-          get().addEventListeners([
-            {
-              id: payload.id,
-              action: 'system',
-              callback: (msg) => {
-                clearTimeout(timer);
-                if (msg?.result) {
-                  resolve(msg.result);
-                } else {
-                  reject(new Error('Not valid response'));
-                }
-              },
-            },
-          ]);
-          ws.send(payload);
-        } else {
-          clearTimeout(timer);
-          reject(new Error('No websocket connection'));
-        }
-      }),
+    
   };
 });
 

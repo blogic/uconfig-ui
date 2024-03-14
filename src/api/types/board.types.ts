@@ -1,20 +1,22 @@
 export type Board = {
-  /** UNIX timestamp */
-  localtime: number;
-  /** Uptime in seconds */
-  uptime: number;
-  load: [number, number, number];
-  memory: {
-    total: number;
-    free: number;
-    shared: number;
-    buffered: number;
-    available: number;
-    cached: number;
+  kernel: string;
+  /** Serial Number */
+  hostname: string;
+  /** CPU */
+  system: string;
+  model: string;
+  board_name: string;
+  rootfs_type: string;
+  release: {
+    distribution: string;
+    version: string;
+    revision: string;
+    target: string;
+    description: string;
   };
 };
 
-export const DUMMY_BOARD: Board = {
+/*export const DUMMY_BOARD: Board = {
   localtime: 1709221055,
   uptime: 17321,
   load: [5760, 6080, 5312],
@@ -26,4 +28,4 @@ export const DUMMY_BOARD: Board = {
     available: 413192192,
     cached: 33972224,
   },
-};
+};*/

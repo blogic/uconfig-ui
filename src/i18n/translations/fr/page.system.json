@@ -13,7 +13,7 @@
 	"processor": "Processeur",
 	"restart": "Redémarrer",
 	"restartWarning": "Vous êtes sur le point de redémarrer votre routeur. Cela signifie que votre réseau pourrait être indisponible pendant quelques minutes.",
-	"systemInfo": "Informations système",
+	"boardInfo": "Informations système",
 	"target": "Cible",
 	"timezone": "Fuseau horaire",
 	"title": "Système",

@@ -13,7 +13,7 @@
 	"processor": "Processor",
 	"restart": "Restart",
 	"restartWarning": "You are about to restart your router. This will mean your network might be unavailable for a few minutes.",
-	"systemInfo": "System Information",
+	"boardInfo": "Board Information",
 	"target": "Target",
 	"timezone": "Timezone",
 	"title": "System",
