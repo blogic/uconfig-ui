@@ -1,5 +1,5 @@
 import { StoreApi, UseBoundStore } from 'zustand';
-//import { DUMMY_BOARD } from './types/board.types';
+// import { DUMMY_BOARD } from './types/board.types';
 import { DUMMY_CLIENTS } from './types/clients.types';
 import { Configuration } from './types/configurations.types';
 import { DUMMY_PORTS } from './types/ports.types';
@@ -8,7 +8,7 @@ import { randomIntId } from 'utils/randomIntId';
 
 type GenericMessage = {
   id?: number;
-  action: 'user' | 'event' | 'config' | 'system';
+  action: 'user' | 'event' | 'config' | 'system' | 'login-required' | 'setup-required' | 'authenticated';
   method: string;
   params?: Partial<{
     configs: string[];
@@ -48,7 +48,7 @@ export const WebSocketApiActions = {
         return {
           method: 'info',
           id: message.id,
-          info: message.params
+          info: message.params,
         };
       }
       if (message.method === 'board') {

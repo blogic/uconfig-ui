@@ -1,5 +1,5 @@
 export type Request = {
-    id: number;
-    action: string;
-    method: string;
+  id: number;
+  action: string;
+  method: string;
 };

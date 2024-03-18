@@ -18,6 +18,7 @@ import {
 } from './webSocketUtils';
 import ReconnectingWebSocket from 'api/ReconnectingWebSocket';
 
+/** Handle raw WebSocket messages and call corresponding callback(s) */
 const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, callbacks: WebSocketCallback[]) => {
   const parsedMessage = JSON.parse(event.data);
 
@@ -79,21 +80,28 @@ const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, c
   }
 };
 
-export type WebSocketApiStatus = 'connecting' | 'connected' | 'login' | 'first-wizard' | 'authorized' | 'error';
+export type WebSocketApiStatus =
+  | 'connecting'
+  | 'connected'
+  | 'login-required'
+  | 'setup-required'
+  | 'authorized'
+  | 'error';
 
 export type WebSocketStore = {
+  ws: ReconnectingWebSocket;
   status: WebSocketApiStatus;
   configuration?: object;
   eventListeners: WebSocketCallback[];
   addEventListeners: (callback: WebSocketCallback[]) => void;
-  get: <T>(
+  request: <T>(request: {
     payload: {
       id: number;
       action: string | WebSocketCallback['action'];
-    } & object,
-    extractFn: (response: any) => T | undefined,
-    timeout?: number,
-  ) => Promise<T>;
+    } & object;
+    extractFn: (response: any) => T | undefined;
+    timeout?: number;
+  }) => Promise<T>;
 
   login: (req: { username: string; password: string }) => Promise<{ result: 'success' | 'failure' }>;
   restart: (timeout?: number) => Promise<true | false>;
@@ -124,8 +132,7 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
         eventListeners: state.eventListeners.filter((callback) => !callbacksToRemove.includes(callback)),
       }));
     } catch (e) {
-      // TODO: handle error
-      // console.error(e);
+      // TODO: handle error? log?
     }
   };
 
@@ -138,6 +145,7 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
   };
 
   return {
+    ws,
     status: 'connecting',
     eventListeners: [],
     addEventListeners: (events: WebSocketCallback[]) => {
@@ -145,14 +153,18 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
         eventListeners: [...state.eventListeners, ...events],
       }));
     },
-    get: async <T>(
+    request: <T>({
+      payload,
+      extractFn,
+      timeout,
+    }: {
       payload: {
         id: number;
         action: string | WebSocketCallback['action'];
-      } & object,
-      extractFn: (response: any) => T | undefined,
-      timeout = 5 * 1000,
-    ): Promise<T> =>
+      } & object;
+      extractFn: (response: any) => T | undefined;
+      timeout?: number;
+    }): Promise<T> =>
       new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           reject(new Error(`Promise timed out after ${timeout} ms`));
@@ -180,99 +192,65 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
           reject(new Error('No websocket connection'));
         }
       }),
-    login: async ({ username, password }) =>
-      get().get<{ result: 'success' | 'failure' }>(
-        WebSocketApiActions.user.login.getPayload(username, password),
-        (response) => {
+    login: ({ username, password }) =>
+      get().request<{ result: 'success' | 'failure' }>({
+        payload: WebSocketApiActions.user.login.getPayload(username, password),
+        extractFn: (response) => {
           if (response?.result === 'success') {
             storeLoginInfo({ username, password });
           }
           return { result: response?.result };
         },
-      ),
-    restart: async () =>
-      get().get(WebSocketApiActions.system.restart.getPayload(), (response) => response?.result || false),
-    getConfigurationList: async () =>
-      get().get(WebSocketApiActions.config.getListPayload(), (response) => {
-        if (response?.active && response.configs) {
-          return {
-            active: response.active,
-            configs: response.configs,
-          };
-        }
+      }),
+    restart: () =>
+      get().request({
+        payload: WebSocketApiActions.system.restart.getPayload(),
+        extractFn: (response) => response?.result || false,
+      }),
+    getConfigurationList: () =>
+      get().request({
+        payload: WebSocketApiActions.config.getListPayload(),
+        extractFn: (response) => {
+          if (response?.active && response.configs) {
+            return {
+              active: response.active,
+              configs: response.configs,
+            };
+          }
 
-        return undefined;
+          return undefined;
+        },
       }) as Promise<{
         configs: string[];
         active: string;
       }>,
-    getCurrentConfiguration: async (timeout = 1000 * 5): Promise<Configuration> =>
-      new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error(`Promise timed out after ${timeout} ms`));
-        }, timeout);
-        if (ws) {
-          const payload = WebSocketApiActions.config.getCurrentPayload();
-          get().addEventListeners([
-            {
-              id: payload.id,
-              action: 'config',
-              callback: (msg) => {
-                clearTimeout(timer);
-                if (msg?.config) {
-                  resolve(msg.config);
-                } else {
-                  reject(new Error('Not valid response'));
-                }
-              },
-            },
-          ]);
-          ws.send(payload);
-        } else {
-          clearTimeout(timer);
-          reject(new Error('No websocket connection'));
-        }
+    getCurrentConfiguration: () =>
+      get().request({
+        payload: WebSocketApiActions.config.getCurrentPayload(),
+        extractFn: (response) => response?.config,
+      }),
+    getSystemInfo: () =>
+      get().request({
+        payload: WebSocketApiActions.system.getSystemInfo.getPayload(),
+        extractFn: (response) => response?.info,
+      }),
+    getBoard: () =>
+      get().request({
+        payload: WebSocketApiActions.system.getBoard.getPayload(),
+        extractFn: (response) => response?.board,
       }),
 
-    getSystemInfo: async () =>
-      get().get(
-        WebSocketApiActions.system.getSystemInfo.getPayload(),
-        (response) => response?.info,
-      ) as Promise<SystemInfo>,
-
-    getBoard: async () =>
-      get().get(WebSocketApiActions.system.getBoard.getPayload(), (response) => response?.board) as Promise<Board>,
-
-    getPorts: async () =>
-      get().get(WebSocketApiActions.system.getPorts.getPayload(), (response) => response?.ports) as Promise<Ports>,
-
-    getClients: async (timeout = 1000 * 5): Promise<Clients> =>
-      new Promise((resolve, reject) => {
-        const timer = setTimeout(() => {
-          reject(new Error(`Promise timed out after ${timeout} ms`));
-        }, timeout);
-        if (ws) {
-          resolve(DUMMY_CLIENTS);
-          // const payload = WebSocketApiActions.system.getClients.getPayload();
-          // get().addEventListeners([
-          //   {
-          //     id: payload.id,
-          //     action: 'system',
-          //     callback: (msg) => {
-          //       clearTimeout(timer);
-          //       if (msg?.clients) {
-          //         resolve(msg.clients);
-          //       } else {
-          //         reject(new Error('Not valid response'));
-          //       }
-          //     },
-          //   },
-          // ]);
-          // ws.send(payload);
-        } else {
-          clearTimeout(timer);
-          reject(new Error('No websocket connection'));
-        }
+    getPorts: () =>
+      get().request({
+        payload: WebSocketApiActions.system.getPorts.getPayload(),
+        extractFn: (response) => response?.ports,
+      }),
+    getClients: () =>
+      get().request({
+        payload: WebSocketApiActions.system.getClients.getPayload(),
+        extractFn: () =>
+          // TODO: return real clients
+          DUMMY_CLIENTS,
       }),
   } satisfies WebSocketStore;
 });
