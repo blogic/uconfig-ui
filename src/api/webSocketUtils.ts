@@ -1,5 +1,3 @@
-import { StoreApi, UseBoundStore } from 'zustand';
-// import { DUMMY_BOARD } from './types/board.types';
 import { DUMMY_CLIENTS } from './types/clients.types';
 import { Configuration } from './types/configurations.types';
 import { DUMMY_PORTS } from './types/ports.types';
@@ -194,23 +192,6 @@ export const isValidWebSocketMessage = (message: object): message is GenericMess
   }
 
   return false;
-};
-/**
- * This is a workaround for the lack of TypeScript support for recursive types. Used in conjunction with
- * zustand hooks, it allows to create a store with selectors that are automatically typed.
- */
-type WithSelectors<S> = S extends { getState: () => infer T } ? S & { use: { [K in keyof T]: () => T[K] } } : never;
-
-export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(_store: S) => {
-  const store = _store as WithSelectors<typeof _store>;
-  store.use = {};
-  // eslint-disable-next-line no-restricted-syntax
-  for (const k of Object.keys(store.getState())) {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (store.use as any)[k] = () => store((s) => s[k as keyof typeof s]);
-  }
-
-  return store;
 };
 
 const STORAGE_LOGIN_INFO_KEY = 'loginInfo';

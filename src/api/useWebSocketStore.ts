@@ -11,7 +11,6 @@ import {
   WebSocketEventCallback,
   WebSocketSystemCallback,
   WebSocketUserCallback,
-  createSelectors,
   getStoredLoginInfo,
   isValidWebSocketMessage,
   removeStoredLoginInfo,
@@ -115,7 +114,7 @@ export type WebSocketStore = {
   getClients: (timeout?: number) => Promise<Clients>;
 };
 
-export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
+export const useWebSocketStore = create<WebSocketStore>((set, get) => {
   const ws = new ReconnectingWebSocket({ url: import.meta.env.VITE_WS_URL });
 
   ws.onopen = () => {
@@ -273,5 +272,3 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
       }),
   } satisfies WebSocketStore;
 });
-
-export const useWebSocketStore = createSelectors(useWebSocketStoreBase);

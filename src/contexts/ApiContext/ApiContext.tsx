@@ -9,7 +9,7 @@ export type UseApiReturn = {
 export const ApiContext = React.createContext<UseApiReturn | null>(null);
 
 export const ApiProvider = ({ children }: { children: React.ReactNode }) => {
-  const wsStatus = useWebSocketStore.use.status();
+  const wsStatus = useWebSocketStore((state) => state.status);
 
   const value = React.useMemo(() => ({ wsStatus }), [wsStatus]);
 

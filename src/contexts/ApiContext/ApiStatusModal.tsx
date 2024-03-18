@@ -5,7 +5,7 @@ import { Spinner } from 'components/Spinner';
 
 export const ApiStatusModal = () => {
   const { t } = useTranslation();
-  const wsStatus = useWebSocketStore.use.status();
+  const wsStatus = useWebSocketStore((state) => state.status);
 
   if (wsStatus === 'connecting')
     return (
