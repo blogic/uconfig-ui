@@ -5,6 +5,12 @@ export const Route = createFileRoute('/')({
   beforeLoad: async () => {
     // If the user is logged out, redirect them to the login page
     const { status, login } = useWebSocketStore.getState();
+
+    if (status === 'setup-required') {
+      throw redirect({
+        to: '/setup',
+      });
+    }
     if (status !== 'authorized') {
       const res = await login();
 

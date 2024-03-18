@@ -29,6 +29,11 @@ export const Route = createFileRoute('/protected')({
   beforeLoad: async () => {
     const { status, login } = useWebSocketStore.getState();
 
+    if (status === 'setup-required') {
+      throw redirect({
+        to: '/setup',
+      });
+    }
     if (status !== 'authorized') {
       const res = await login();
 
