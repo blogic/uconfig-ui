@@ -2,12 +2,12 @@ import { SignOut } from '@phosphor-icons/react';
 import { useRouter } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from './Tooltip';
-import { useAuth } from 'contexts/AuthContext/useAuth';
+import { useWebSocketStore } from 'api/useWebSocketStore';
 
 export const LogoutButton = () => {
   const { t } = useTranslation('navigation');
-  const { logout } = useAuth();
   const router = useRouter();
+  const logout = useWebSocketStore((state) => state.logout);
 
   const onLogout = () => {
     logout();

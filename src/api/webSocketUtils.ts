@@ -222,7 +222,11 @@ export const storeLoginInfo = (loginInfo: { username: string; password: string }
 export const getStoredLoginInfo = () => {
   const loginInfo = localStorage.getItem(STORAGE_LOGIN_INFO_KEY);
   if (loginInfo) {
-    return JSON.parse(loginInfo);
+    return JSON.parse(loginInfo) as { username: string; password: string };
   }
   return null;
+};
+
+export const removeStoredLoginInfo = () => {
+  localStorage.removeItem(STORAGE_LOGIN_INFO_KEY);
 };

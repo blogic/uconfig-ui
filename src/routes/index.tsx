@@ -1,12 +1,14 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import { useWebSocketStore } from 'api/useWebSocketStore';
 
 export const Route = createFileRoute('/')({
-  beforeLoad: async ({ context }) => {
+  beforeLoad: async () => {
     // If the user is logged out, redirect them to the login page
-    if (!context.auth.isAuthenticated) {
-      const res = await context.auth.loginWithStoredInformation();
+    const { status, login } = useWebSocketStore.getState();
+    if (status !== 'authorized') {
+      const res = await login();
 
-      if (res === 'failure')
+      if (res.result === 'failure')
         throw redirect({
           to: '/login',
           search: {

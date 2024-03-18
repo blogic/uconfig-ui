@@ -1,6 +1,9 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import { getBoardOptions } from 'api/queries/board';
+import { getClientsOptions } from 'api/queries/clients';
 import { getCurrentConfigurationOptions } from 'api/queries/configurations';
 import { getSystemInfoOptions } from 'api/queries/systemInfo';
+import { useWebSocketStore } from 'api/useWebSocketStore';
 import { LanguageSelector } from 'components/LanguageSelector';
 import { LogoutButton } from 'components/LogoutButton';
 import { ThemeSelector } from 'components/ThemeSelector';
@@ -23,11 +26,13 @@ const Component = () => (
 );
 
 export const Route = createFileRoute('/protected')({
-  beforeLoad: async ({ context }) => {
-    if (!context.auth.isAuthenticated) {
-      const res = await context.auth.loginWithStoredInformation();
+  beforeLoad: async () => {
+    const { status, login } = useWebSocketStore.getState();
 
-      if (res === 'failure')
+    if (status !== 'authorized') {
+      const res = await login();
+
+      if (res.result === 'failure')
         throw redirect({
           to: '/login',
           search: {
@@ -41,6 +46,8 @@ export const Route = createFileRoute('/protected')({
     await Promise.all([
       context.queryClient.ensureQueryData(getCurrentConfigurationOptions()),
       context.queryClient.ensureQueryData(getSystemInfoOptions()),
+      context.queryClient.ensureQueryData(getBoardOptions()),
+      context.queryClient.ensureQueryData(getClientsOptions()),
     ]);
   },
 });

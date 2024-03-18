@@ -1,7 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { ErrorComponent, RouterProvider, createRouter } from '@tanstack/react-router';
 import { Spinner } from 'components/Spinner';
-import { useAuth } from 'contexts/AuthContext/useAuth';
 import { routeTree } from 'routeTree.gen.ts';
 
 const router = createRouter({
@@ -13,7 +12,6 @@ const router = createRouter({
   ),
   defaultErrorComponent: ({ error }) => <ErrorComponent error={error} />,
   context: {
-    auth: undefined!,
     queryClient: undefined!,
   },
   defaultPreload: 'intent',
@@ -26,7 +24,6 @@ declare module '@tanstack/react-router' {
 }
 
 const App = () => {
-  const authContext = useAuth();
   const queryClient = useQueryClient();
 
   return (
@@ -36,7 +33,6 @@ const App = () => {
       defaultPendingMs={1000}
       defaultPendingMinMs={500}
       context={{
-        auth: authContext,
         queryClient,
       }}
     />

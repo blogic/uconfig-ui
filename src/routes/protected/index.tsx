@@ -3,8 +3,6 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { HomeClients } from './-index/HomeClients';
 import { HomeSystemInfo } from './-index/HomeSystemInfo';
-import { getBoardOptions } from 'api/queries/board';
-import { getClientsOptions } from 'api/queries/clients';
 import { NavigationButton, NavigationButtonProps } from 'components/NavigationButton';
 
 const Component = () => {
@@ -47,10 +45,4 @@ const Component = () => {
 
 export const Route = createFileRoute('/protected/')({
   component: Component,
-  beforeLoad: async ({ context }) => {
-    await Promise.all([
-      context.queryClient.ensureQueryData(getBoardOptions()),
-      context.queryClient.ensureQueryData(getClientsOptions()),
-    ]);
-  },
 });

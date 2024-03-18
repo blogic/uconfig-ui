@@ -5,6 +5,7 @@ import { createFileRoute, useRouter } from '@tanstack/react-router';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
+import { useWebSocketStore } from 'api/useWebSocketStore';
 import { Button } from 'components/Button';
 import { ThemeSelector } from 'components/ThemeSelector';
 
@@ -19,7 +20,10 @@ const Component = () => {
   const { t: tLogin } = useTranslation('login');
   const { t: tCommon } = useTranslation('common');
   const router = useRouter();
-  const { auth } = Route.useRouteContext();
+  const { login, status } = useWebSocketStore((state) => ({
+    login: state.login,
+    status: state.status,
+  }));
   const search = Route.useSearch();
   const {
     register,
@@ -41,7 +45,7 @@ const Component = () => {
       setTimeout(resolve, 1000);
     });
 
-    const result = await auth.login(data.username, data.password);
+    const { result } = await login({ username: data.username, password: data.password });
 
     if (result === 'success') {
       setIsError(false);
@@ -59,7 +63,7 @@ const Component = () => {
   const [isPasswordHidden, setIsPasswordHidden] = React.useState(true);
 
   React.useEffect(() => {
-    if (auth.isAuthenticated) {
+    if (status === 'authorized') {
       router.invalidate();
 
       if (search.redirect) {
@@ -68,10 +72,10 @@ const Component = () => {
         router.navigate({ to: '/protected/' });
       }
     }
-  }, [auth.isAuthenticated]);
+  }, [status]);
 
   React.useEffect(() => {
-    auth.loginWithStoredInformation();
+    login();
   }, []);
 
   return (

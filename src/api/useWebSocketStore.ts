@@ -14,6 +14,7 @@ import {
   createSelectors,
   getStoredLoginInfo,
   isValidWebSocketMessage,
+  removeStoredLoginInfo,
   storeLoginInfo,
 } from './webSocketUtils';
 import ReconnectingWebSocket from 'api/ReconnectingWebSocket';
@@ -103,9 +104,9 @@ export type WebSocketStore = {
     timeout?: number;
   }) => Promise<T>;
 
-  login: (req: { username: string; password: string }) => Promise<{ result: 'success' | 'failure' }>;
+  login: (req?: { username: string; password: string }) => Promise<{ result: 'success' | 'failure' }>;
+  logout: () => void;
   restart: (timeout?: number) => Promise<true | false>;
-
   getConfigurationList: (timeout?: number) => Promise<{ configs: string[]; active: string }>;
   getCurrentConfiguration: (timeout?: number) => Promise<Configuration>;
   getSystemInfo: (timeout?: number) => Promise<SystemInfo>;
@@ -156,7 +157,7 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
     request: <T>({
       payload,
       extractFn,
-      timeout,
+      timeout = 5000,
     }: {
       payload: {
         id: number;
@@ -192,16 +193,34 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
           reject(new Error('No websocket connection'));
         }
       }),
-    login: ({ username, password }) =>
-      get().request<{ result: 'success' | 'failure' }>({
-        payload: WebSocketApiActions.user.login.getPayload(username, password),
-        extractFn: (response) => {
-          if (response?.result === 'success') {
-            storeLoginInfo({ username, password });
-          }
-          return { result: response?.result };
-        },
-      }),
+    login: (req) => {
+      if (req) {
+        return get().request<{ result: 'success' | 'failure' }>({
+          payload: WebSocketApiActions.user.login.getPayload(req.username, req.password),
+          extractFn: (response) => {
+            if (response?.result === 'success') {
+              storeLoginInfo(req);
+            }
+            return { result: response?.result };
+          },
+        });
+      }
+      const storedInformation = getStoredLoginInfo();
+      if (storedInformation) {
+        return get().request<{ result: 'success' | 'failure' }>({
+          payload: WebSocketApiActions.user.login.getPayload(storedInformation.username, storedInformation.password),
+          extractFn: (response) => ({ result: response?.result }),
+        });
+      }
+
+      return Promise.resolve({ result: 'failure' });
+    },
+    logout: () => {
+      // TODO: is there a logout action?
+      removeStoredLoginInfo();
+      get().ws.disconnect();
+      set({ status: 'login-required' });
+    },
     restart: () =>
       get().request({
         payload: WebSocketApiActions.system.restart.getPayload(),

@@ -59,6 +59,10 @@ export default class ReconnectingWebSocket {
     }
   }
 
+  public disconnect = () => {
+    this._disconnect();
+  };
+
   private _connect = () => {
     if (!this._lockConnect) {
       this._totalTries += 1;
