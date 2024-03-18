@@ -4,7 +4,6 @@ import { Clients, DUMMY_CLIENTS } from './types/clients.types';
 import { Configuration } from './types/configurations.types';
 import { Ports } from './types/ports.types';
 import { SystemInfo } from './types/systemInfo.types';
-
 import {
   WebSocketApiActions,
   WebSocketCallback,
@@ -86,20 +85,19 @@ export type WebSocketStore = {
   status: WebSocketApiStatus;
   configuration?: object;
   eventListeners: WebSocketCallback[];
-  
   addEventListeners: (callback: WebSocketCallback[]) => void;
-  get: (
+  get: <T>(
     payload: {
       id: number;
       action: string | WebSocketCallback['action'];
     } & object,
-    extractFn: (response: any) => object | undefined,
+    extractFn: (response: any) => T | undefined,
     timeout?: number,
-  ) => Promise<unknown>;
-  
-  login: (req: { username: string; password: string; }) => Promise<{ result: 'success' | 'failure' }>;
+  ) => Promise<T>;
+
+  login: (req: { username: string; password: string }) => Promise<{ result: 'success' | 'failure' }>;
   restart: (timeout?: number) => Promise<true | false>;
-  
+
   getConfigurationList: (timeout?: number) => Promise<{ configs: string[]; active: string }>;
   getCurrentConfiguration: (timeout?: number) => Promise<Configuration>;
   getSystemInfo: (timeout?: number) => Promise<SystemInfo>;
@@ -115,8 +113,7 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
     set({ status: 'connected' });
     const storedInformation = getStoredLoginInfo();
 
-    if (storedInformation)
-      get().login(storedInformation);
+    if (storedInformation) get().login(storedInformation);
   };
 
   ws.onmessage = (event) => {
@@ -148,15 +145,14 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
         eventListeners: [...state.eventListeners, ...events],
       }));
     },
-
-    get: async (
+    get: async <T>(
       payload: {
         id: number;
         action: string | WebSocketCallback['action'];
       } & object,
-      extractFn: (response: any) => object | undefined,
+      extractFn: (response: any) => T | undefined,
       timeout = 5 * 1000,
-    ) =>
+    ): Promise<T> =>
       new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           reject(new Error(`Promise timed out after ${timeout} ms`));
@@ -184,20 +180,18 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
           reject(new Error('No websocket connection'));
         }
       }),
-
-
     login: async ({ username, password }) =>
-      get().get(WebSocketApiActions.user.login.getPayload(username, password), (response) => {
-        if (response?.result === 'success')
-          storeLoginInfo({ username, password });
-        return { result: response?.result };
-      }),
-    
+      get().get<{ result: 'success' | 'failure' }>(
+        WebSocketApiActions.user.login.getPayload(username, password),
+        (response) => {
+          if (response?.result === 'success') {
+            storeLoginInfo({ username, password });
+          }
+          return { result: response?.result };
+        },
+      ),
     restart: async () =>
-      get().get(WebSocketApiActions.system.restart.getPayload(), (response) => {
-        return response?.result || false;
-      }),
-
+      get().get(WebSocketApiActions.system.restart.getPayload(), (response) => response?.result || false),
     getConfigurationList: async () =>
       get().get(WebSocketApiActions.config.getListPayload(), (response) => {
         if (response?.active && response.configs) {
@@ -212,7 +206,6 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
         configs: string[];
         active: string;
       }>,
-
     getCurrentConfiguration: async (timeout = 1000 * 5): Promise<Configuration> =>
       new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
@@ -241,13 +234,16 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
         }
       }),
 
-    getSystemInfo: async () => 
-      get().get(WebSocketApiActions.system.getSystemInfo.getPayload(), (response) => response?.info) as Promise<SystemInfo>,
+    getSystemInfo: async () =>
+      get().get(
+        WebSocketApiActions.system.getSystemInfo.getPayload(),
+        (response) => response?.info,
+      ) as Promise<SystemInfo>,
 
-    getBoard: async () => 
+    getBoard: async () =>
       get().get(WebSocketApiActions.system.getBoard.getPayload(), (response) => response?.board) as Promise<Board>,
 
-    getPorts: async () => 
+    getPorts: async () =>
       get().get(WebSocketApiActions.system.getPorts.getPayload(), (response) => response?.ports) as Promise<Ports>,
 
     getClients: async (timeout = 1000 * 5): Promise<Clients> =>
@@ -278,8 +274,7 @@ export const useWebSocketStoreBase = create<WebSocketStore>((set, get) => {
           reject(new Error('No websocket connection'));
         }
       }),
-    
-  };
+  } satisfies WebSocketStore;
 });
 
 export const useWebSocketStore = createSelectors(useWebSocketStoreBase);
