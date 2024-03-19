@@ -22,54 +22,15 @@ const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, c
     throw new Error('Invalid WebSocket message');
   }
 
-  switch (parsedMessage.action) {
-    case 'config': {
-      const callbacksToFire = callbacks.filter(
-        (callback) => callback.action === 'config' && callback.id === parsedMessage.id,
-      );
+  const callbacksToFire = callbacks.filter(
+    (callback) => callback.action === parsedMessage.action && callback.id === parsedMessage.id,
+  );
 
-      callbacksToFire.forEach(({ callback }) => {
-        callback(parsedMessage);
-      });
+  callbacksToFire.forEach(({ callback }) => {
+    callback(parsedMessage);
+  });
 
-      return callbacksToFire;
-    }
-    case 'user': {
-      const callbacksToFire = callbacks.filter(
-        (callback) => callback.action === 'user' && callback.id === parsedMessage.id,
-      );
-
-      callbacksToFire.forEach(({ callback }) => {
-        callback(parsedMessage);
-      });
-
-      return callbacksToFire;
-    }
-    case 'system': {
-      const callbacksToFire = callbacks.filter(
-        (callback) => callback.action === 'system' && callback.id === parsedMessage.id,
-      );
-
-      callbacksToFire.forEach(({ callback }) => {
-        callback(parsedMessage);
-      });
-
-      return callbacksToFire;
-    }
-    case 'get': {
-      const callbacksToFire = callbacks.filter(
-        (callback) => callback.action === 'get' && callback.id === parsedMessage.id,
-      );
-
-      callbacksToFire.forEach(({ callback }) => {
-        callback(parsedMessage);
-      });
-
-      return callbacksToFire;
-    }
-    default:
-      throw new Error('Invalid WebSocket message');
-  }
+  return callbacksToFire;
 };
 
 export type WebSocketApiStatus =
