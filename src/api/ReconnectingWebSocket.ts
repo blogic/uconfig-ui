@@ -1,4 +1,4 @@
-import { WebSocketApiActions } from './webSocketUtils';
+import { createApiPayload } from './webSocketUtils';
 
 const CONNECTION_TIMEOUT = 10 * 1000;
 const PING_INTERVAL = 10 * 1000;
@@ -81,7 +81,7 @@ export default class ReconnectingWebSocket {
 
       this._pingInterval = setInterval(() => {
         if (this._webSocket?.readyState === 1) {
-          this._webSocket?.send(JSON.stringify(WebSocketApiActions.event.ping.getPayload()));
+          this._webSocket?.send(JSON.stringify(createApiPayload({ action: 'event', method: 'ping' })));
         }
       }, PING_INTERVAL);
     }

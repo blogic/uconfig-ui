@@ -5,13 +5,8 @@ import { Configuration } from './types/configurations.types';
 import { Ports } from './types/ports.types';
 import { SystemInfo } from './types/systemInfo.types';
 import {
-  WebSocketApiActions,
   WebSocketCallback,
-  WebSocketConfigCallback,
-  WebSocketEventCallback,
-  WebSocketGetCallback,
-  WebSocketSystemCallback,
-  WebSocketUserCallback,
+  createApiPayload,
   getStoredLoginInfo,
   isValidWebSocketMessage,
   removeStoredLoginInfo,
@@ -29,61 +24,45 @@ const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, c
 
   switch (parsedMessage.action) {
     case 'config': {
-      const response = WebSocketApiActions.config.handleResponse(parsedMessage);
       const callbacksToFire = callbacks.filter(
         (callback) => callback.action === 'config' && callback.id === parsedMessage.id,
       );
 
-      callbacksToFire.forEach((callback) => {
-        (callback as WebSocketConfigCallback).callback(response);
-      });
-
-      return callbacksToFire;
-    }
-    case 'event': {
-      const response = WebSocketApiActions.event.handleResponse(parsedMessage);
-      const callbacksToFire = callbacks.filter(
-        (callback) => callback.action === 'event' && callback.id === parsedMessage.id,
-      );
-
-      callbacksToFire.forEach((callback) => {
-        (callback as WebSocketEventCallback).callback(response);
+      callbacksToFire.forEach(({ callback }) => {
+        callback(parsedMessage);
       });
 
       return callbacksToFire;
     }
     case 'user': {
-      const response = WebSocketApiActions.user.handleResponse(parsedMessage);
       const callbacksToFire = callbacks.filter(
         (callback) => callback.action === 'user' && callback.id === parsedMessage.id,
       );
 
-      callbacksToFire.forEach((callback) => {
-        (callback as WebSocketUserCallback).callback(response);
+      callbacksToFire.forEach(({ callback }) => {
+        callback(parsedMessage);
       });
 
       return callbacksToFire;
     }
     case 'system': {
-      const response = WebSocketApiActions.system.handleResponse(parsedMessage);
       const callbacksToFire = callbacks.filter(
         (callback) => callback.action === 'system' && callback.id === parsedMessage.id,
       );
 
-      callbacksToFire.forEach((callback) => {
-        (callback as WebSocketSystemCallback).callback(response);
+      callbacksToFire.forEach(({ callback }) => {
+        callback(parsedMessage);
       });
 
       return callbacksToFire;
     }
     case 'get': {
-      const response = WebSocketApiActions.get.handleResponse(parsedMessage);
       const callbacksToFire = callbacks.filter(
         (callback) => callback.action === 'get' && callback.id === parsedMessage.id,
       );
 
-      callbacksToFire.forEach((callback) => {
-        (callback as WebSocketGetCallback).callback(response);
+      callbacksToFire.forEach(({ callback }) => {
+        callback(parsedMessage);
       });
 
       return callbacksToFire;
@@ -193,7 +172,7 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
                 if (extractedResponse) {
                   resolve(extractedResponse);
                 } else {
-                  reject(new Error('Not valid response'));
+                  reject(new Error(`Not valid response (response: ${JSON.stringify(msg)})`));
                 }
               },
             },
@@ -207,21 +186,39 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
     login: (req) => {
       if (req) {
         return get().request<{ result: 'success' | 'failure' }>({
-          payload: WebSocketApiActions.user.login.getPayload(req.username, req.password),
+          payload: createApiPayload({
+            action: 'user',
+            method: 'authenticate',
+            params: req,
+          }),
           extractFn: (response) => {
-            if (response?.result === 'success') {
+            if (response.result === 0) {
               storeLoginInfo(req);
               set({ status: 'authorized' });
+              return { result: 'success', id: response.id };
             }
-            return { result: response?.result };
+            return { result: 'failure', id: response.id };
           },
         });
       }
       const storedInformation = getStoredLoginInfo();
       if (storedInformation) {
         return get().request<{ result: 'success' | 'failure' }>({
-          payload: WebSocketApiActions.user.login.getPayload(storedInformation.username, storedInformation.password),
-          extractFn: (response) => ({ result: response?.result }),
+          payload: createApiPayload({
+            action: 'user',
+            method: 'authenticate',
+            params: {
+              username: storedInformation.username,
+              password: storedInformation.password,
+            },
+          }),
+          extractFn: (response) => {
+            if (response.result === 0) {
+              set({ status: 'authorized' });
+              return { result: 'success', id: response.id };
+            }
+            return { result: 'failure', id: response.id };
+          },
         });
       }
 
@@ -235,12 +232,12 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
     },
     restart: () =>
       get().request({
-        payload: WebSocketApiActions.system.restart.getPayload(),
-        extractFn: (response) => response?.result || false,
+        payload: createApiPayload({ action: 'system', method: 'reboot' }),
+        extractFn: (response) => response?.result === 0,
       }),
     getConfigurationList: () =>
       get().request({
-        payload: WebSocketApiActions.config.getListPayload(),
+        payload: createApiPayload({ action: 'config', method: 'list' }),
         extractFn: (response) => {
           if (response?.active && response.configs) {
             return {
@@ -251,35 +248,31 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
 
           return undefined;
         },
-      }) as Promise<{
-        configs: string[];
-        active: string;
-      }>,
+      }),
     getCurrentConfiguration: () =>
       get().request({
-        payload: WebSocketApiActions.config.getCurrentPayload(),
-        extractFn: (response) => response?.config,
+        payload: createApiPayload({ action: 'config', method: 'get' }),
+        extractFn: (response) => response?.params?.config,
       }),
     getSystemInfo: () =>
       get().request({
-        payload: WebSocketApiActions.system.getSystemInfo.getPayload(),
-        extractFn: (response) => response?.info,
+        payload: createApiPayload({ action: 'system', method: 'info' }),
+        extractFn: (response) => response?.params,
       }),
     getBoard: () =>
       get().request({
-        payload: WebSocketApiActions.system.getBoard.getPayload(),
-        extractFn: (response) => response?.board,
+        payload: createApiPayload({ action: 'system', method: 'board' }),
+        extractFn: (response) => response?.params,
       }),
-
     getPorts: () =>
       get().request({
-        payload: WebSocketApiActions.system.getPorts.getPayload(),
-        extractFn: (response) => response?.ports,
+        payload: createApiPayload({ action: 'get', method: 'ports' }),
+        extractFn: (response) => response?.params,
       }),
     getClients: () =>
       get().request({
-        payload: WebSocketApiActions.get.getClients.getPayload(),
-        extractFn: (response) => response?.clients,
+        payload: createApiPayload({ action: 'get', method: 'clients' }),
+        extractFn: (response) => response?.params,
       }),
   } satisfies WebSocketStore;
 });
