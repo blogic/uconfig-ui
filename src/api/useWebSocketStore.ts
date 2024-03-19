@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { Board } from './types/board.types';
-import { Clients, DUMMY_CLIENTS } from './types/clients.types';
+import { Clients } from './types/clients.types';
 import { Configuration } from './types/configurations.types';
 import { Ports } from './types/ports.types';
 import { SystemInfo } from './types/systemInfo.types';
@@ -9,6 +9,7 @@ import {
   WebSocketCallback,
   WebSocketConfigCallback,
   WebSocketEventCallback,
+  WebSocketGetCallback,
   WebSocketSystemCallback,
   WebSocketUserCallback,
   getStoredLoginInfo,
@@ -71,6 +72,18 @@ const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, c
 
       callbacksToFire.forEach((callback) => {
         (callback as WebSocketSystemCallback).callback(response);
+      });
+
+      return callbacksToFire;
+    }
+    case 'get': {
+      const response = WebSocketApiActions.get.handleResponse(parsedMessage);
+      const callbacksToFire = callbacks.filter(
+        (callback) => callback.action === 'get' && callback.id === parsedMessage.id,
+      );
+
+      callbacksToFire.forEach((callback) => {
+        (callback as WebSocketGetCallback).callback(response);
       });
 
       return callbacksToFire;
@@ -177,7 +190,6 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
               callback: (msg: any) => {
                 clearTimeout(timer);
                 const extractedResponse = extractFn(msg);
-
                 if (extractedResponse) {
                   resolve(extractedResponse);
                 } else {
@@ -265,10 +277,8 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
       }),
     getClients: () =>
       get().request({
-        payload: WebSocketApiActions.system.getClients.getPayload(),
-        extractFn: () =>
-          // TODO: return real clients
-          DUMMY_CLIENTS,
+        payload: WebSocketApiActions.get.getClients.getPayload(),
+        extractFn: (response) => response?.clients,
       }),
   } satisfies WebSocketStore;
 });

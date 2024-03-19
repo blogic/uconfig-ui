@@ -1,4 +1,4 @@
-import { DUMMY_CLIENTS } from './types/clients.types';
+import { Clients } from './types/clients.types';
 import { Configuration } from './types/configurations.types';
 import { DUMMY_PORTS } from './types/ports.types';
 import { SystemInfo } from './types/systemInfo.types';
@@ -6,7 +6,7 @@ import { randomIntId } from 'utils/randomIntId';
 
 type GenericMessage = {
   id?: number;
-  action: 'user' | 'event' | 'config' | 'system' | 'login-required' | 'setup-required' | 'authenticated';
+  action: 'user' | 'event' | 'config' | 'system' | 'login-required' | 'setup-required' | 'authenticated' | 'get';
   method: string;
   params?: Partial<{
     configs: string[];
@@ -18,6 +18,22 @@ type GenericMessage = {
 };
 
 export const WebSocketApiActions = {
+  get: {
+    getClients: {
+      getPayload: () => ({ id: randomIntId(), action: 'get', method: 'clients' }),
+    },
+    handleResponse: (message: any) => {
+      if (message.method === 'clients') {
+        return {
+          method: 'clients',
+          id: message.id,
+          clients: message.params as Clients,
+        };
+      }
+
+      return null;
+    },
+  },
   system: {
     getSystemInfo: {
       getPayload: () => ({ id: randomIntId(), action: 'system', method: 'info' }),
@@ -27,9 +43,6 @@ export const WebSocketApiActions = {
     },
     getPorts: {
       getPayload: () => ({ id: randomIntId(), action: 'system', method: 'ports' }),
-    },
-    getClients: {
-      getPayload: () => ({ id: randomIntId(), action: 'system', method: 'clients' }),
     },
     restart: {
       getPayload: () => ({ id: randomIntId(), action: 'system', method: 'reboot' }),
@@ -61,13 +74,6 @@ export const WebSocketApiActions = {
           method: 'ports',
           id: message.id,
           ports: DUMMY_PORTS,
-        };
-      }
-      if (message.method === 'clients') {
-        return {
-          method: 'clients',
-          id: message.id,
-          clients: DUMMY_CLIENTS,
         };
       }
 
@@ -178,11 +184,21 @@ export type WebSocketUserCallback = {
   callback: (response: ReturnType<(typeof WebSocketApiActions)['user']['handleResponse']>) => void;
 };
 
+export type WebSocketGetCallback = {
+  /** The id given with the request message */
+  id: number;
+  action: 'get';
+
+  /** Will be called once the corresponding response is received */
+  callback: (response: ReturnType<(typeof WebSocketApiActions)['get']['handleResponse']>) => void;
+};
+
 export type WebSocketCallback =
   | WebSocketConfigCallback
   | WebSocketEventCallback
   | WebSocketUserCallback
-  | WebSocketSystemCallback;
+  | WebSocketSystemCallback
+  | WebSocketGetCallback;
 
 export const isValidWebSocketMessage = (message: object): message is GenericMessage => {
   const msg = message as GenericMessage;

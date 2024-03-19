@@ -3,7 +3,7 @@ import { Tooltip } from './Tooltip';
 
 export type NavigationButtonProps = {
   label: string;
-  navigateOptions: LinkProps & { preload?: 'intent' };
+  navigateOptions: LinkProps;
   icon: React.ReactNode;
 };
 

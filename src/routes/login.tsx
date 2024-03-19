@@ -71,6 +71,8 @@ const Component = () => {
       } else {
         router.navigate({ to: '/protected/' });
       }
+    } else if (status === 'setup-required') {
+      router.navigate({ to: '/setup' });
     }
   }, [status]);
 
