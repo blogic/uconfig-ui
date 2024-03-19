@@ -211,6 +211,7 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
           extractFn: (response) => {
             if (response?.result === 'success') {
               storeLoginInfo(req);
+              set({ status: 'authorized' });
             }
             return { result: response?.result };
           },
