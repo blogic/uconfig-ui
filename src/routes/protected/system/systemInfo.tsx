@@ -7,7 +7,7 @@ import { PageTitleBar } from 'layout/PageTitleBar';
 
 const Component = () => {
   const { t } = useTranslation('system');
-  const getInfo = useSuspenseQuery(getBoardOptions());
+  const getInfo = useSuspenseQuery(getBoardOptions);
 
   return (
     <>
@@ -26,6 +26,6 @@ const Component = () => {
 export const Route = createFileRoute('/protected/system/systemInfo')({
   component: Component,
   beforeLoad: async ({ context }) => {
-    await context.queryClient.ensureQueryData(getBoardOptions());
+    await context.queryClient.ensureQueryData(getBoardOptions);
   },
 });

@@ -8,7 +8,7 @@ import { capitalizeFirstLetter } from 'utils/strings';
 
 const Component = () => {
   const { t } = useTranslation('network');
-  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions());
+  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions);
   const navigate = useNavigate();
 
   return (

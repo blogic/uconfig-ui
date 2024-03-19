@@ -10,9 +10,9 @@ import { StatDisplay } from 'components/StatDisplay';
 export const HomeSystemInfo = () => {
   const { t } = useTranslation('home');
   const { t: tSystem } = useTranslation('system');
-  const getClients = useSuspenseQuery(getClientsOptions());
-  const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions());
-  const { data: boardInfo } = useSuspenseQuery(getBoardOptions());
+  const getClients = useSuspenseQuery(getClientsOptions);
+  const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions);
+  const { data: boardInfo } = useSuspenseQuery(getBoardOptions);
 
   const memoryUsedPct =
     Math.round(((systemInfo.memory.total - systemInfo.memory.available) / systemInfo.memory.total) * 100 * 100) / 100;

@@ -7,7 +7,7 @@ import { PageTitleBar } from 'layout/PageTitleBar';
 
 const Component = () => {
   const { t } = useTranslation('wireless');
-  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions());
+  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions);
 
   const ssids = Object.keys(currentConfiguration.interfaces.wan?.ssids ?? {});
 

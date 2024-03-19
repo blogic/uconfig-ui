@@ -14,8 +14,8 @@ const Component = () => {
   const { t } = useTranslation('system');
   const { t: tHome } = useTranslation('home');
   const navigate = useNavigate();
-  const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions());
-  const { data: boardInfo } = useSuspenseQuery(getBoardOptions());
+  const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions);
+  const { data: boardInfo } = useSuspenseQuery(getBoardOptions);
 
   const memoryUsedPct =
     Math.round(((systemInfo.memory.total - systemInfo.memory.available) / systemInfo.memory.total) * 100 * 100) / 100;

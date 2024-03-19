@@ -146,7 +146,7 @@ export const Route = createFileRoute('/protected/clients/$macAddress')({
   }),
   stringifyParams: ({ macAddress }) => ({ macAddress }),
   loader: async ({ context, params }) => {
-    const data = await context.queryClient.ensureQueryData(getClientsOptions());
+    const data = await context.queryClient.ensureQueryData(getClientsOptions);
     const currentClient = data[params.macAddress];
     if (!currentClient) {
       throw new Error('Client not found');

@@ -33,7 +33,7 @@ type FormState = z.infer<ReturnType<typeof formSchema>>;
 const Component = () => {
   const { t } = useTranslation('wireless');
   const { t: tCommon } = useTranslation();
-  const getConfiguration = useSuspenseQuery(getCurrentConfigurationOptions());
+  const getConfiguration = useSuspenseQuery(getCurrentConfigurationOptions);
 
   const allCurrentSsids = Object.values(getConfiguration.data.interfaces?.wan?.ssids ?? {}).map(({ ssid }) => ssid);
 

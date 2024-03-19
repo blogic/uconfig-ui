@@ -12,19 +12,18 @@ export const extractDisplayName = (mac: string, info: Client['info']) => {
 
 const QUERY_KEY = 'clients';
 
-export const getClientsOptions = () =>
-  queryOptions({
-    queryKey: [QUERY_KEY, 'current'],
-    queryFn: () => useWebSocketStore.getState().getClients(),
-    select: (data) => ({
-      clients: data,
-      clientsArray: Object.entries(data)
-        .map(([key, client]) => ({
-          mac: key,
-          client,
-          displayName: extractDisplayName(key, client.info),
-        }))
-        .sort((a, b) => a.displayName.localeCompare(b.displayName)),
-    }),
-    staleTime: 1000 * 60,
-  });
+export const getClientsOptions = queryOptions({
+  queryKey: [QUERY_KEY, 'current'],
+  queryFn: () => useWebSocketStore.getState().getClients(),
+  select: (data) => ({
+    clients: data,
+    clientsArray: Object.entries(data)
+      .map(([key, client]) => ({
+        mac: key,
+        client,
+        displayName: extractDisplayName(key, client.info),
+      }))
+      .sort((a, b) => a.displayName.localeCompare(b.displayName)),
+  }),
+  staleTime: 1000 * 60,
+});

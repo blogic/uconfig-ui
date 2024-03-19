@@ -22,7 +22,7 @@ type FormState = z.infer<typeof formSchema>;
 const Component = () => {
   const { t } = useTranslation('network');
   const { t: tCommon } = useTranslation('common');
-  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions());
+  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions);
 
   const defaultValues: FormState = React.useMemo(() => {
     const wan = currentConfiguration.interfaces.wan as unknown as InterfaceConfiguration;

@@ -21,7 +21,7 @@ type FormState = z.infer<typeof formSchema>;
 const Component = () => {
   const { t } = useTranslation('system');
   const { t: tCommon } = useTranslation();
-  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions());
+  const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions);
 
   const defaultValues = React.useMemo(
     () => ({

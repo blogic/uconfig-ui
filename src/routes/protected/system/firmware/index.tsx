@@ -9,7 +9,7 @@ import { PageTitleBar } from 'layout/PageTitleBar';
 const Component = () => {
   const { t } = useTranslation('system');
   const navigate = useNavigate();
-  const getInfo = useSuspenseQuery(getBoardOptions());
+  const getInfo = useSuspenseQuery(getBoardOptions);
 
   return (
     <>

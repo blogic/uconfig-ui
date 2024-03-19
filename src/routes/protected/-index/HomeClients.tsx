@@ -13,7 +13,7 @@ const ICON_CLASSES = 'h-5 w-5 - text-primary-500 dark:text-primary-200 ml-2 mr-1
 
 export const HomeClients = () => {
   const { t } = useTranslation('home');
-  const getClients = useSuspenseQuery(getClientsOptions());
+  const getClients = useSuspenseQuery(getClientsOptions);
   const navigate = useNavigate();
 
   const wifiClients = getClients.data.clientsArray.filter((client) => client.client.wifi);

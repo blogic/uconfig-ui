@@ -49,10 +49,10 @@ export const Route = createFileRoute('/protected')({
   component: Component,
   loader: async ({ context }) => {
     await Promise.all([
-      context.queryClient.ensureQueryData(getCurrentConfigurationOptions()),
-      context.queryClient.ensureQueryData(getSystemInfoOptions()),
-      context.queryClient.ensureQueryData(getBoardOptions()),
-      context.queryClient.ensureQueryData(getClientsOptions()),
+      context.queryClient.ensureQueryData(getCurrentConfigurationOptions),
+      context.queryClient.ensureQueryData(getSystemInfoOptions),
+      context.queryClient.ensureQueryData(getBoardOptions),
+      context.queryClient.ensureQueryData(getClientsOptions),
     ]);
   },
 });

@@ -123,7 +123,7 @@ export const Route = createFileRoute('/protected/wireless/$interfaceId/$ssid/')(
   }),
   stringifyParams: ({ ssid, interfaceId }) => ({ ssid, interfaceId }),
   loader: async ({ context, params }) => {
-    const configuration = await context.queryClient.ensureQueryData(getCurrentConfigurationOptions());
+    const configuration = await context.queryClient.ensureQueryData(getCurrentConfigurationOptions);
     const currentSsid = configuration.interfaces[params.interfaceId]?.ssids?.[params.ssid];
     if (!currentSsid) {
       // TODO: Should be uncommented to prevent users from accessing non-existing SSIDs
