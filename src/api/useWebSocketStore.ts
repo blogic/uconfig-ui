@@ -90,7 +90,7 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
   };
 
   ws.onclose = () => {
-    set({ status: 'error' });
+    set({ status: 'connecting' });
   };
 
   ws.onerror = () => {

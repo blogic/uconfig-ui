@@ -2,7 +2,7 @@ import { createApiPayload } from './webSocketUtils';
 
 const CONNECTION_TIMEOUT = 10 * 1000;
 const PING_INTERVAL = 10 * 1000;
-const RECONNECT_INTERVAL = 1000 * 5;
+const RECONNECT_INTERVAL = 1000 * 1;
 const QUEUE_MAX_SIZE = 100;
 
 export type ReconnectingWebSocketOptions = {
@@ -89,6 +89,7 @@ export default class ReconnectingWebSocket {
 
   private _reconnect = () => {
     this._lockConnect = false;
+    this._connect();
     this._reconnectInterval = setInterval(() => {
       this._connect();
     }, RECONNECT_INTERVAL);
