@@ -39,7 +39,7 @@ export const SetupWifiStep = ({ submitForm }: WifiStepProps) => {
   });
 
   const onSubmit = (data: FormState) => {
-    submitForm(data);
+    submitForm({ wifi: data });
   };
 
   return (

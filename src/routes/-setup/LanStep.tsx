@@ -42,7 +42,7 @@ export const SetupLanStep = ({ submitForm }: LanStepProps) => {
   });
 
   const onSubmit = (data: FormState) => {
-    submitForm({ wan: data });
+    submitForm({ lan: data });
   };
 
   return (
