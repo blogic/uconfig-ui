@@ -81,6 +81,7 @@ export type WebSocketStore = {
   getBoard: (timeout?: number) => Promise<Board>;
   getPorts: (timeout?: number) => Promise<Ports>;
   getClients: (timeout?: number) => Promise<Clients>;
+  finishWizard: (wizardResult: object) => Promise<boolean>;
 };
 
 export const useWebSocketStore = create<WebSocketStore>((set, get) => {
@@ -244,6 +245,11 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
       get().request({
         payload: createApiPayload({ action: 'get', method: 'clients' }),
         extractFn: (response) => response?.params,
+      }),
+    finishWizard: (wizardResult: object) =>
+      get().request({
+        payload: createApiPayload({ action: 'config', method: 'wizard', params: wizardResult }),
+        extractFn: (response) => response?.result === 0,
       }),
   } satisfies WebSocketStore;
 });

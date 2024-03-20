@@ -4,11 +4,11 @@ import { createFileRoute } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { SetupConfirmStep } from './-setup/ConfirmStep';
 import { SetupDeviceStep } from './-setup/DeviceStep';
+import { SetupGuestStep } from './-setup/GuestStep';
+import { SetupIoTStep } from './-setup/IoTStep';
 import { SetupWanStep } from './-setup/WanStep';
 import { SetupWelcomeStep } from './-setup/WelcomeStep';
 import { SetupWifiStep } from './-setup/WifiStep';
-import { SetupGuestStep } from './-setup/GuestStep';
-import { SetupIoTStep } from './-setup/IoTStep';
 import { ThemeSelector } from 'components/ThemeSelector';
 
 const STEPS = ['welcome', 'deviceDetails', 'wan', 'wifi', 'guest', 'iot', 'confirm'] as const;
@@ -44,7 +44,7 @@ const stepToForm = (
     case 'wifi':
       return <SetupWifiStep submitForm={updateData} />;
     case 'confirm':
-      return <SetupConfirmStep submitForm={updateData} state={state} />;
+      return <SetupConfirmStep state={state} />;
     default:
       return null;
   }
