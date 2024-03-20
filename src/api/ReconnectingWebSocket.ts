@@ -79,8 +79,7 @@ export default class ReconnectingWebSocket {
         }
       }, CONNECTION_TIMEOUT);
 
-      if (this._pingInterval)
-        clearInterval(this._pingInterval);
+      if (this._pingInterval) clearInterval(this._pingInterval);
 
       this._pingInterval = setInterval(() => {
         if (this._webSocket?.readyState === 1) {

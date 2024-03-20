@@ -15,11 +15,13 @@ import { Route as SetupImport } from './routes/setup'
 import { Route as ProtectedImport } from './routes/protected'
 import { Route as LogoutImport } from './routes/logout'
 import { Route as LoginImport } from './routes/login'
+import { Route as ActionsImport } from './routes/actions'
 import { Route as IndexImport } from './routes/index'
 import { Route as ProtectedIndexImport } from './routes/protected/index'
 import { Route as ProtectedWirelessImport } from './routes/protected/wireless'
 import { Route as ProtectedSystemImport } from './routes/protected/system'
 import { Route as ProtectedNetworkImport } from './routes/protected/network'
+import { Route as ActionsConfiguringImport } from './routes/actions/configuring'
 import { Route as ProtectedWirelessIndexImport } from './routes/protected/wireless/index'
 import { Route as ProtectedSystemIndexImport } from './routes/protected/system/index'
 import { Route as ProtectedNetworkIndexImport } from './routes/protected/network/index'
@@ -59,6 +61,11 @@ const LoginRoute = LoginImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const ActionsRoute = ActionsImport.update({
+  path: '/actions',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const IndexRoute = IndexImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
@@ -82,6 +89,11 @@ const ProtectedSystemRoute = ProtectedSystemImport.update({
 const ProtectedNetworkRoute = ProtectedNetworkImport.update({
   path: '/network',
   getParentRoute: () => ProtectedRoute,
+} as any)
+
+const ActionsConfiguringRoute = ActionsConfiguringImport.update({
+  path: '/configuring',
+  getParentRoute: () => ActionsRoute,
 } as any)
 
 const ProtectedWirelessIndexRoute = ProtectedWirelessIndexImport.update({
@@ -178,6 +190,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
+    '/actions': {
+      preLoaderRoute: typeof ActionsImport
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       preLoaderRoute: typeof LoginImport
       parentRoute: typeof rootRoute
@@ -193,6 +209,10 @@ declare module '@tanstack/react-router' {
     '/setup': {
       preLoaderRoute: typeof SetupImport
       parentRoute: typeof rootRoute
+    }
+    '/actions/configuring': {
+      preLoaderRoute: typeof ActionsConfiguringImport
+      parentRoute: typeof ActionsImport
     }
     '/protected/network': {
       preLoaderRoute: typeof ProtectedNetworkImport
@@ -281,6 +301,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
+  ActionsRoute.addChildren([ActionsConfiguringRoute]),
   LoginRoute,
   LogoutRoute,
   ProtectedRoute.addChildren([

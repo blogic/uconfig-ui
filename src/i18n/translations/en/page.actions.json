@@ -1,0 +1,4 @@
+{
+	"configuringExplanation": "Configuring for the past {{seconds}} seconds...",
+	"configuringTitle": "Device Currently Re-Configuring"
+}

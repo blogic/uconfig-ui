@@ -8,16 +8,15 @@ import { StringFormField } from 'components/Form/StringField';
 import { Heading } from 'components/Heading';
 import { Text } from 'components/Text';
 
-const formSchema = 
-  z.discriminatedUnion('enable', [
-    z.object({
-      enable: z.literal('disable'),
-    }),
-    z.object({
-      enable: z.literal('enable'),
-      password: z.string().min(8),
-    }),
-  ]);
+const formSchema = z.discriminatedUnion('enable', [
+  z.object({
+    enable: z.literal('disable'),
+  }),
+  z.object({
+    enable: z.literal('enable'),
+    password: z.string().min(8),
+  }),
+]);
 
 type FormState = z.infer<typeof formSchema>;
 
@@ -64,14 +63,14 @@ export const SetupIoTStep = ({ submitForm }: IoTStepProps) => {
           ]}
         />
         {isEnabled ? (
-            <StringFormField<FormState>
-              register={register}
-              name="password"
-              label={tSetup('iotPassword')}
-              placeholder="Secure Password"
-              errors={errors}
-              canHide
-            />
+          <StringFormField<FormState>
+            register={register}
+            name="password"
+            label={tSetup('iotPassword')}
+            placeholder="Secure Password"
+            errors={errors}
+            canHide
+          />
         ) : null}
         <div className="flex space-x-6">
           <Button buttonType="submit" disabled={!isValid} isLoading={isSubmitting}>

@@ -3,6 +3,7 @@ import { initReactI18next } from 'react-i18next';
 import commonEn from './translations/en/common.json';
 import loginEn from './translations/en/login.json';
 import navigationEn from './translations/en/navigation.json';
+import actionsEn from './translations/en/page.actions.json';
 import clientEn from './translations/en/page.client.json';
 import homeEn from './translations/en/page.home.json';
 import networkEn from './translations/en/page.network.json';
@@ -12,6 +13,7 @@ import wirelessEn from './translations/en/page.wireless.json';
 import commonFr from './translations/fr/common.json';
 import loginFr from './translations/fr/login.json';
 import navigationFr from './translations/fr/navigation.json';
+import actionsFr from './translations/fr/page.actions.json';
 import clientFr from './translations/fr/page.client.json';
 import homeFr from './translations/fr/page.home.json';
 import networkFr from './translations/fr/page.network.json';
@@ -23,6 +25,7 @@ export const defaultNS = 'common';
 
 export const resources = {
   en: {
+    actions: actionsEn,
     client: clientEn,
     common: commonEn,
     home: homeEn,
@@ -34,6 +37,7 @@ export const resources = {
     wireless: wirelessEn,
   },
   fr: {
+    actions: actionsFr,
     client: clientFr,
     common: commonFr,
     home: homeFr,

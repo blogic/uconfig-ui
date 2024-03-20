@@ -14,6 +14,20 @@ import {
 } from './webSocketUtils';
 import ReconnectingWebSocket from 'api/ReconnectingWebSocket';
 
+const ACCEPTED_STATUSES = [
+  'connecting',
+  'connected',
+  'login-required',
+  'setup-required',
+  'authorized',
+  'error',
+  're-configuring',
+] as const;
+
+export type WebSocketApiStatus = (typeof ACCEPTED_STATUSES)[number];
+
+export const WEBSOCKET_PENDING_ACTION_STATUSES = ['re-configuring'];
+
 /** Handle raw WebSocket messages and call corresponding callback(s) */
 const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, callbacks: WebSocketCallback[]) => {
   const parsedMessage = JSON.parse(event.data);
@@ -30,16 +44,16 @@ const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, c
     callback(parsedMessage);
   });
 
-  return callbacksToFire;
-};
+  let newStatus: WebSocketApiStatus | undefined;
 
-export type WebSocketApiStatus =
-  | 'connecting'
-  | 'connected'
-  | 'login-required'
-  | 'setup-required'
-  | 'authorized'
-  | 'error';
+  if (parsedMessage.action === 'event' && ACCEPTED_STATUSES.includes(parsedMessage.method as WebSocketApiStatus))
+    newStatus = parsedMessage.method as WebSocketApiStatus;
+
+  return {
+    callbacksToRemove: callbacksToFire,
+    newStatus,
+  };
+};
 
 export type WebSocketStore = {
   ws: ReconnectingWebSocket;
@@ -81,8 +95,11 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
 
   ws.onmessage = (event) => {
     try {
-      const callbacksToRemove = handleWebSocketMessage(event, ws, get().eventListeners);
+      const { callbacksToRemove, newStatus } = handleWebSocketMessage(event, ws, get().eventListeners);
 
+      if (newStatus) {
+        get().setStatus(newStatus);
+      }
       set((state) => ({
         eventListeners: state.eventListeners.filter((callback) => !callbacksToRemove.includes(callback)),
       }));
@@ -92,11 +109,15 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
   };
 
   ws.onclose = () => {
-    get().setStatus('connecting');
+    if (!WEBSOCKET_PENDING_ACTION_STATUSES.includes(get().status)) {
+      get().setStatus('connecting');
+    }
   };
 
   ws.onerror = () => {
-    get().setStatus('error');
+    if (!WEBSOCKET_PENDING_ACTION_STATUSES.includes(get().status)) {
+      get().setStatus('error');
+    }
   };
 
   return {
