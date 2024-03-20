@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TFunction } from 'i18next';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
@@ -9,7 +8,7 @@ import { StringFormField } from 'components/Form/StringField';
 import { Heading } from 'components/Heading';
 import { Text } from 'components/Text';
 
-const formSchema = (t: TFunction<'common'>) =>
+const formSchema = 
   z.discriminatedUnion('enable', [
     z.object({
       enable: z.literal('disable'),
@@ -20,7 +19,7 @@ const formSchema = (t: TFunction<'common'>) =>
     }),
   ]);
 
-type FormState = z.infer<ReturnType<typeof formSchema>>;
+type FormState = z.infer<typeof formSchema>;
 
 export type GuestStepProps = {
   submitForm: (data: Record<string, unknown>) => void;
@@ -36,7 +35,7 @@ export const SetupGuestStep = ({ submitForm }: GuestStepProps) => {
     watch,
     formState: { isSubmitting, isValid, errors },
   } = useForm<FormState>({
-    resolver: zodResolver(formSchema(t)),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       enable: 'disable',
     },

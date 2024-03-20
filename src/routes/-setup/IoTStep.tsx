@@ -9,7 +9,7 @@ import { StringFormField } from 'components/Form/StringField';
 import { Heading } from 'components/Heading';
 import { Text } from 'components/Text';
 
-const formSchema = (t: TFunction<'common'>) =>
+const formSchema = 
   z.discriminatedUnion('enable', [
     z.object({
       enable: z.literal('disable'),
@@ -20,7 +20,7 @@ const formSchema = (t: TFunction<'common'>) =>
     }),
   ]);
 
-type FormState = z.infer<ReturnType<typeof formSchema>>;
+type FormState = z.infer<typeof formSchema>;
 
 export type IoTStepProps = {
   submitForm: (data: Record<string, unknown>) => void;
@@ -36,7 +36,7 @@ export const SetupIoTStep = ({ submitForm }: IoTStepProps) => {
     watch,
     formState: { isSubmitting, isValid, errors },
   } = useForm<FormState>({
-    resolver: zodResolver(formSchema(t)),
+    resolver: zodResolver(formSchema),
     defaultValues: {
       enable: 'disable',
     },
