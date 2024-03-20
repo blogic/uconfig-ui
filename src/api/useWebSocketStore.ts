@@ -44,6 +44,8 @@ export type WebSocketApiStatus =
 export type WebSocketStore = {
   ws: ReconnectingWebSocket;
   status: WebSocketApiStatus;
+  statusLastChanged: Date;
+  setStatus: (status: WebSocketApiStatus) => void;
   configuration?: object;
   eventListeners: WebSocketCallback[];
   addEventListeners: (callback: WebSocketCallback[]) => void;
@@ -71,7 +73,7 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
   const ws = new ReconnectingWebSocket({ url: import.meta.env.VITE_WS_URL });
 
   ws.onopen = () => {
-    set({ status: 'connected' });
+    get().setStatus('connected');
     const storedInformation = getStoredLoginInfo();
 
     if (storedInformation) get().login(storedInformation);
@@ -90,16 +92,20 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
   };
 
   ws.onclose = () => {
-    set({ status: 'connecting' });
+    get().setStatus('connecting');
   };
 
   ws.onerror = () => {
-    set({ status: 'error' });
+    get().setStatus('error');
   };
 
   return {
     ws,
     status: 'connecting',
+    statusLastChanged: new Date(),
+    setStatus: (status) => {
+      set({ status, statusLastChanged: new Date() });
+    },
     eventListeners: [],
     addEventListeners: (events: WebSocketCallback[]) => {
       set((state) => ({
@@ -145,37 +151,19 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
         }
       }),
     login: (req) => {
-      if (req) {
+      const request = req ?? getStoredLoginInfo();
+
+      if (request) {
         return get().request<{ result: 'success' | 'failure' }>({
           payload: createApiPayload({
             action: 'user',
             method: 'authenticate',
-            params: req,
+            params: request,
           }),
           extractFn: (response) => {
             if (response.result === 0) {
-              storeLoginInfo(req);
-              set({ status: 'authorized' });
-              return { result: 'success', id: response.id };
-            }
-            return { result: 'failure', id: response.id };
-          },
-        });
-      }
-      const storedInformation = getStoredLoginInfo();
-      if (storedInformation) {
-        return get().request<{ result: 'success' | 'failure' }>({
-          payload: createApiPayload({
-            action: 'user',
-            method: 'authenticate',
-            params: {
-              username: storedInformation.username,
-              password: storedInformation.password,
-            },
-          }),
-          extractFn: (response) => {
-            if (response.result === 0) {
-              set({ status: 'authorized' });
+              storeLoginInfo(request);
+              get().setStatus('authorized');
               return { result: 'success', id: response.id };
             }
             return { result: 'failure', id: response.id };
@@ -189,7 +177,8 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
       // TODO: is there a logout action?
       removeStoredLoginInfo();
       get().ws.disconnect();
-      set({ status: 'login-required' });
+
+      get().setStatus('login-required');
     },
     restart: () =>
       get().request({
