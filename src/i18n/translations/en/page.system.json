@@ -1,5 +1,6 @@
 {
 	"appVersion": "APP Version",
+	"boardInfo": "Board Information",
 	"description": "Here you can manage system settings of your router",
 	"firmware": "Firmware",
 	"firmwareUpgrade": "Firmware Upgrade",
@@ -13,7 +14,6 @@
 	"processor": "Processor",
 	"restart": "Restart",
 	"restartWarning": "You are about to restart your router. This will mean your network might be unavailable for a few minutes.",
-	"boardInfo": "Board Information",
 	"target": "Target",
 	"timezone": "Timezone",
 	"title": "System",

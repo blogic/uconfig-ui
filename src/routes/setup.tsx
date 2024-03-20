@@ -1,25 +1,27 @@
 import React from 'react';
-import { Check, Devices, HandWaving, WifiHigh } from '@phosphor-icons/react';
+import { Check, Devices, HandWaving, WifiHigh, BezierCurve, MaskHappy, Planet } from '@phosphor-icons/react';
 import { createFileRoute } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { SetupConfirmStep } from './-setup/ConfirmStep';
 import { SetupDeviceStep } from './-setup/DeviceStep';
-import { SetupLanStep } from './-setup/LanStep';
 import { SetupWanStep } from './-setup/WanStep';
 import { SetupWelcomeStep } from './-setup/WelcomeStep';
 import { SetupWifiStep } from './-setup/WifiStep';
+import { SetupGuestStep } from './-setup/GuestStep';
+import { SetupIoTStep } from './-setup/IoTStep';
 import { ThemeSelector } from 'components/ThemeSelector';
 
-const STEPS = ['welcome', 'deviceDetails', 'wan', 'lan', 'wifi', 'confirm'] as const;
+const STEPS = ['welcome', 'deviceDetails', 'wan', 'wifi', 'guest', 'iot', 'confirm'] as const;
 
 type Step = (typeof STEPS)[number];
 
 const STEP_TO_ICON = {
   welcome: <HandWaving className="h-6 w-6" />,
   deviceDetails: <Devices className="h-6 w-6" />,
-  wan: 'WAN',
-  lan: 'LAN',
+  wan: <BezierCurve className="h-6 w-6" />,
   wifi: <WifiHigh className="h-6 w-6" />,
+  guest: <MaskHappy className="h-6 w-6" />,
+  iot: <Planet className="h-6 w-6" />,
   confirm: <Check className="h-6 w-6" />,
 } as const;
 
@@ -35,8 +37,10 @@ const stepToForm = (
       return <SetupDeviceStep submitForm={updateData} />;
     case 'wan':
       return <SetupWanStep submitForm={updateData} />;
-    case 'lan':
-      return <SetupLanStep submitForm={updateData} />;
+    case 'guest':
+      return <SetupGuestStep submitForm={updateData} />;
+    case 'iot':
+      return <SetupIoTStep submitForm={updateData} />;
     case 'wifi':
       return <SetupWifiStep submitForm={updateData} />;
     case 'confirm':

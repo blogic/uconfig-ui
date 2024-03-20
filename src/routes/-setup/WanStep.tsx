@@ -60,7 +60,7 @@ export const SetupWanStep = ({ submitForm }: WanStepProps) => {
 
   return (
     <div>
-      <Heading size="lg">WAN</Heading>
+      <Heading size="lg">{tSetup('wanTitle')}</Heading>
       <Heading size="md" className="mt-4">
         {t('ipv4')}
       </Heading>

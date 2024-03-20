@@ -1,5 +1,6 @@
 {
 	"appVersion": "Version de l'application",
+	"boardInfo": "Informations système",
 	"description": "Ici, vous pouvez gérer les paramètres système de votre routeur",
 	"firmware": "Micrologiciel",
 	"firmwareUpgrade": "Mise à jour du firmware",
@@ -13,7 +14,6 @@
 	"processor": "Processeur",
 	"restart": "Redémarrer",
 	"restartWarning": "Vous êtes sur le point de redémarrer votre routeur. Cela signifie que votre réseau pourrait être indisponible pendant quelques minutes.",
-	"boardInfo": "Informations système",
 	"target": "Cible",
 	"timezone": "Fuseau horaire",
 	"title": "Système",

@@ -12,9 +12,9 @@ const formSchema = (t: TFunction<'common'>) =>
   z.object({
     hostname: z
       .string()
-      .min(8)
+      .min(1)
       .refine((value) => isValidAlphanumeric(value), t('invalidAlphanumeric')),
-    password: z.string().min(8),
+    password: z.string().min(1),
   });
 
 type FormState = z.infer<ReturnType<typeof formSchema>>;
@@ -41,7 +41,7 @@ export const SetupDeviceStep = ({ submitForm }: DeviceStepProps) => {
   });
 
   const onSubmit = (data: FormState) => {
-    submitForm(data);
+    submitForm({ device: data });
   };
 
   return (

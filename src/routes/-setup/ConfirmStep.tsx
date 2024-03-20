@@ -14,7 +14,7 @@ export const SetupConfirmStep = ({ submitForm, state }: ConfirmStepProps) => {
     <div className="w-full">
       <Heading size="lg">{t('confirmTitle')}</Heading>
       <pre>{JSON.stringify(state, null, 2)}</pre>
-      <Button buttonType="button" onClick={() => submitForm({})} className="mt-4">
+      <Button buttonType="button" onClick={() => submitForm(state)} className="mt-4">
         {t('save')}
       </Button>
     </div>
