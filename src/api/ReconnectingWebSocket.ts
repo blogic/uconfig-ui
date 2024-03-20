@@ -79,6 +79,9 @@ export default class ReconnectingWebSocket {
         }
       }, CONNECTION_TIMEOUT);
 
+      if (this._pingInterval)
+        clearInterval(this._pingInterval);
+
       this._pingInterval = setInterval(() => {
         if (this._webSocket?.readyState === 1) {
           this._webSocket?.send(JSON.stringify(createApiPayload({ action: 'event', method: 'ping' })));
