@@ -37,7 +37,7 @@ export const SetupDeviceStep = ({ submitForm }: DeviceStepProps) => {
     defaultValues: {
       hostname: '',
       password: '',
-      timezone: Intl.DateTimeFormat().resolvedOptions().locale,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
     },
     mode: 'all',
   });

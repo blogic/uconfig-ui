@@ -7,7 +7,7 @@ import { extractFormError } from 'utils/extractFormError';
 export type SelectFormFieldOption = {
   value: string;
   label: string;
-};
+} | string;
 
 export type SelectFormFieldProps<T extends Record<string, unknown>> = {
   register: UseFormRegister<T>;
@@ -58,7 +58,11 @@ export const SelectFormField = <T extends Record<string, unknown>>({
           disabled={isDisabled}
           {...inputProps}
         >
-          {options.map((option) => (
+          {options.map((option) => typeof option === 'string' ? (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ) : (
             <option key={option.label} value={option.value}>
               {option.label}
             </option>

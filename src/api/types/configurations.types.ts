@@ -33,6 +33,13 @@ export type SSIDConfiguration = {
   'bss-mode': 'ap' | 'mesh';
 };
 
+export type WiFiConfiguration = {
+  enable?: 'enable' | 'disable';
+  ssid: string;
+  security: 'max' | 'compat';
+  password: string;
+};
+
 export type InterfaceConfiguration = {
   role: 'upstream' | 'downstream';
   services: ('mdns' | 'web-ui' | 'ssh')[];
@@ -53,7 +60,14 @@ export type UnitConfiguration = {
   timezone?: string;
 };
 
+export type DeviceConfiguration = {
+  'leds-active'?: boolean;
+  hostname?: string;
+  timezone?: string;
+};
+
 export type Configuration = {
+  /* old */
   uuid: string;
   interfaces: {
     [key: string]: InterfaceConfiguration;
@@ -64,4 +78,10 @@ export type Configuration = {
     };
   };
   unit?: UnitConfiguration;
+
+  /* new */
+  device: DeviceConfiguration;
+  wifi: WiFiConfiguration;
+  iot: WiFiConfiguration;
+  guest: WiFiConfiguration;
 };

@@ -8,15 +8,20 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { getCurrentConfigurationOptions } from 'api/queries/configurations';
 import { Button } from 'components/Button';
-import { SelectFormField } from 'components/Form/SelectField';
-import { TIMEZONES } from 'data/tz';
+import { StringFormField } from 'components/Form/StringField';
 import { PageTitleBar } from 'layout/PageTitleBar';
+import { isValidAlphanumeric } from 'utils/formTests';
+import { TFunction } from 'i18next';
 
-const formSchema = z.object({
-  timezone: z.string(),
-});
+const formSchema = (t: TFunction<'common'>) =>
+  z.object({
+    hostname: z
+      .string()
+      .min(1)
+      .refine((value) => isValidAlphanumeric(value), t('invalidAlphanumeric')),
+  });
 
-type FormState = z.infer<typeof formSchema>;
+type FormState = z.infer<ReturnType<typeof formSchema>>;
 
 const Component = () => {
   const { t } = useTranslation('system');
@@ -25,7 +30,7 @@ const Component = () => {
 
   const defaultValues = React.useMemo(
     () => ({
-      timezone: currentConfiguration.device?.timezone ?? TIMEZONES[0],
+      hostname: currentConfiguration.device?.hostname ?? 'OpenWrt',
     }),
     [currentConfiguration],
   );
@@ -36,7 +41,7 @@ const Component = () => {
     reset,
     formState: { isSubmitting, isDirty, isValid, errors },
   } = useForm<FormState>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formSchema(tCommon)),
     defaultValues,
     mode: 'all',
   });
@@ -44,32 +49,29 @@ const Component = () => {
     // Map back form values to the configuration
     const newConfig = currentConfiguration;
 
-    if (newConfig.unit) {
-      newConfig.unit.timezone = data.timezone;
+    if (newConfig.device) {
+      newConfig.device.hostname = data.hostname;
     } else {
       // Create a new interface?
-      newConfig.unit = {
-        timezone: data.timezone,
+      newConfig.device = {
+        hostname: data.hostname,
       };
     }
-
-    console.log(newConfig);
 
     // TODO: Send the new configuration to the server
   };
   return (
     <>
-      <PageTitleBar title={t('timezone')} />
+      <PageTitleBar title={t('hostname')} />
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-        <SelectFormField<FormState>
+       <StringFormField<FormState>
           register={register}
-          name="timezone"
-          label={t('timezone')}
+          name="hostname"
+          label={t('hostname')}
+          placeholder="YourRouterName"
           errors={errors}
-          options={TIMEZONES}
         />
-
-        <div className={clsx('flex space-x-6', isDirty ? 'visible' : 'invisible')}>
+        <div className={clsx('flex space-x-6',  isDirty ? 'visible' : 'invisible')}>
           <Button buttonType="button" onClick={() => reset()} colorScheme="gray">
             {tCommon('reset')}
           </Button>
@@ -82,6 +84,6 @@ const Component = () => {
   );
 };
 
-export const Route = createFileRoute('/protected/system/timezone')({
+export const Route = createFileRoute('/protected/system/hostname')({
   component: Component,
 });

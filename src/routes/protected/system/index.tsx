@@ -1,20 +1,19 @@
-import { /*Brain, Clock, Cpu, */ Power, Factory } from '@phosphor-icons/react';
+import { /*Brain, , Cpu, */Clock, Power, Factory } from '@phosphor-icons/react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { getBoardOptions } from 'api/queries/board';
-//import { getSystemInfoOptions } from 'api/queries/systemInfo';
+import { getSystemInfoOptions } from 'api/queries/systemInfo';
 import { Heading } from 'components/Heading';
-import { InformationTile } from 'components/InformationTile';
 import { NavigationTile } from 'components/NavigationTile';
 import { Text } from 'components/Text';
 import { PageTitleBar } from 'layout/PageTitleBar';
 
 const Component = () => {
   const { t } = useTranslation('system');
-  //const { t: tHome } = useTranslation('home');
+  const { t: tHome } = useTranslation('home');
   const navigate = useNavigate();
-  //const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions);
+  const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions);
   const { data: boardInfo } = useSuspenseQuery(getBoardOptions);
   const getInfo = useSuspenseQuery(getBoardOptions);
 
@@ -37,49 +36,33 @@ const Component = () => {
             }}
             className="rounded-b-none"
           />
-          <InformationTile title={t('hostname')} description={getInfo.data.hostname} className="rounded-t-none" />
-        </div>
-        {/* <div>
-          <InformationTile
-            title={
-              <div className="flex items-center">
-                <Heading size="md">{t('memoryUsed')}</Heading>
-                <Brain className="ml-1  h-6 w-6 text-primary-500 dark:text-primary-300" />
-              </div>
-            }
-            description={`${memoryUsedPct}%`}
-            className="rounded-b-none"
-          />
-
-         <InformationTile
-            title={
-              <div className="flex items-center">
-                <Heading size="md">{t('load')}</Heading>
-                <Cpu className="ml-1  h-6 w-6 text-secondary-500 dark:text-secondary-300" />
-              </div>
-            }
-            // TODO: Temporary, remove once load can be used
-            description={`${systemInfo.load[0]}%`}
-            className="rounded-none"
-          />
           <NavigationTile
-            title={
-              <div className="flex items-center">
-                <Heading size="md">{tHome('localtime')}</Heading>
-                <Clock className="ml-1  h-6 w-6 text-tertiary-500 dark:text-tertiary-300" />
-              </div>
-            }
-            description={new Date(systemInfo.localtime * 1000).toLocaleString()}
+            title={t('hostname')}
+            description={getInfo.data.hostname}
             onClick={() => {
               navigate({
                 from: Route.fullPath,
-                to: './timezone',
+                to: './hostname',
               });
             }}
             className="rounded-t-none"
           />
         </div>
-          */}
+        <NavigationTile
+          title={
+            <div className="flex items-center">
+              <Heading size="md">{tHome('localtime')}</Heading>
+              <Clock className="ml-1  h-6 w-6 text-tertiary-500 dark:text-tertiary-300" />
+            </div>
+          }
+          description={new Date(systemInfo.localtime * 1000).toLocaleString()}
+          onClick={() => {
+            navigate({
+              from: Route.fullPath,
+              to: './timezone',
+            });
+          }}
+        />
         <NavigationTile
           title={t('firmwareVersion')}
           description={boardInfo.release.description}
@@ -94,7 +77,7 @@ const Component = () => {
           <NavigationTile
             title={
               <div className="flex items-center">
-                <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
+                <Power className="ml-1 mt-0.5 h-6 w-6 text-danger-500 dark:text-danger-300" weight="fill" />
                 <Heading size="md">{t('restart')}</Heading>
               </div>
             }
@@ -110,7 +93,7 @@ const Component = () => {
           <NavigationTile
             title={
               <div className="flex items-center">
-                <Factory className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
+                <Factory className="ml-1 mt-0.5 h-6 w-6 text-danger-500 dark:text-danger-300" weight="fill" />
                 <Heading size="md">{t('factory')}</Heading>
               </div>
             }
