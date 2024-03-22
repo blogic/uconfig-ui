@@ -2,6 +2,8 @@
 	"appVersion": "APP Version",
 	"boardInfo": "Board Information",
 	"description": "Here you can manage system settings of your router",
+	"factory": "Factory reset",
+	"factoryWarning": "You are about to factory reset the device. This will irreversibly delete all data. ",
 	"firmware": "Firmware",
 	"firmwareUpgrade": "Firmware Upgrade",
 	"firmwareUpgradeExplanation": "Please choose a compatible firmware .bin file. You will be able to confirm the hash found before doing the upgrade",

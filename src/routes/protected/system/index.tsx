@@ -103,6 +103,21 @@ const Component = () => {
             });
           }}
         />
+        <NavigationTile
+          title={
+            <div className="flex items-center">
+              <Heading size="md">{t('factory')}</Heading>
+              <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
+            </div>
+          }
+          description=""
+          onClick={() => {
+            navigate({
+              from: Route.fullPath,
+              to: './factory',
+            });
+          }}
+        />
         <div className="text-center">
           <Text variant="explanation">
             {t('appVersion')}: {__APP_VERSION__}

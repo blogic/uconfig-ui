@@ -1,7 +1,6 @@
-import { Gear, Globe, WifiHigh } from '@phosphor-icons/react';
-import { Link, createFileRoute } from '@tanstack/react-router';
+import { Gear, Globe, WifiHigh, UserList } from '@phosphor-icons/react';
+import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
-import { HomeClients } from './-index/HomeClients';
 import { HomeSystemInfo } from './-index/HomeSystemInfo';
 import { NavigationButton, NavigationButtonProps } from 'components/NavigationButton';
 
@@ -9,8 +8,14 @@ const Component = () => {
   const { t } = useTranslation('wireless');
   const { t: tNetwork } = useTranslation('network');
   const { t: tSystem } = useTranslation('system');
+  const { t: tClients } = useTranslation('clients');
 
   const routes = [
+    {
+      label: tClients('title'),
+      navigateOptions: { to: '/protected/clients/' },
+      icon: <UserList className="block h-8 w-8" aria-hidden="true" />,
+    },
     {
       label: tNetwork('title'),
       navigateOptions: { to: '/protected/network/' },
@@ -32,10 +37,8 @@ const Component = () => {
     <>
       <div className="space-y-4">
         <HomeSystemInfo />
-        <HomeClients />
       </div>
       <div className="mt-8 flex items-center justify-center space-x-8">
-        <Link to="/protected/network/">test</Link>
         {routes.map((route) => (
           <NavigationButton key={route.label} {...route} />
         ))}

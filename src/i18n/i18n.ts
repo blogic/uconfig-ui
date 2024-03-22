@@ -5,6 +5,7 @@ import loginEn from './translations/en/login.json';
 import navigationEn from './translations/en/navigation.json';
 import actionsEn from './translations/en/page.actions.json';
 import clientEn from './translations/en/page.client.json';
+import clientsEn from './translations/en/page.clients.json';
 import homeEn from './translations/en/page.home.json';
 import networkEn from './translations/en/page.network.json';
 import setupEn from './translations/en/page.setup.json';
@@ -15,6 +16,7 @@ import loginFr from './translations/fr/login.json';
 import navigationFr from './translations/fr/navigation.json';
 import actionsFr from './translations/fr/page.actions.json';
 import clientFr from './translations/fr/page.client.json';
+import clientsFr from './translations/fr/page.clients.json';
 import homeFr from './translations/fr/page.home.json';
 import networkFr from './translations/fr/page.network.json';
 import setupFr from './translations/fr/page.setup.json';
@@ -27,6 +29,7 @@ export const resources = {
   en: {
     actions: actionsEn,
     client: clientEn,
+    clients: clientsEn,
     common: commonEn,
     home: homeEn,
     login: loginEn,
@@ -39,6 +42,7 @@ export const resources = {
   fr: {
     actions: actionsFr,
     client: clientFr,
+    clients: clientsFr,
     common: commonFr,
     home: homeFr,
     login: loginFr,

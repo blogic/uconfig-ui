@@ -8,9 +8,17 @@ export const Clients = () => {
   const getClients = useSuspenseQuery(getClientsOptions);
   const navigate = useNavigate();
 
-  const wifiClients = getClients.data.clientsArray.filter((client) => client.client.wifi);
-  const lanClients = getClients.data.clientsArray.filter((client) => !client.client.wifi);
-  const Clients = [...wifiClients, ...lanClients];
+  const Clients = getClients.data.clientsArray.sort((a, b) => {
+    function score(a: any) {
+      let ret = 0;
+      if (a.client?.wifi) ret += 2;
+      if (a.client?.info) ret += 1;
+      return ret;
+    }
+    let compare = score(b) - score(a);
+    if (compare) return compare;
+    return a.displayName.localeCompare(b.displayName); 
+  });
 
   return (
         <>

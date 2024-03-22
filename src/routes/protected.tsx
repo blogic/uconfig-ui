@@ -1,4 +1,4 @@
-import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import { Outlet, createFileRoute, redirect, Link } from '@tanstack/react-router';
 import { getBoardOptions } from 'api/queries/board';
 import { getClientsOptions } from 'api/queries/clients';
 import { getCurrentConfigurationOptions } from 'api/queries/configurations';
@@ -12,7 +12,9 @@ import { MainPageContainer } from 'layout/MainPageContainer';
 const Component = () => (
   <>
     <div className="absolute left-4 top-4 z-50 flex">
+    <Link to="/protected/">
       <img className="h-8 w-auto" src="/OpenWrt_Logo.png" alt="OpenWrt" />
+    </Link>
     </div>
     <div className="absolute right-4 top-4 z-50 flex">
       <LanguageSelector />

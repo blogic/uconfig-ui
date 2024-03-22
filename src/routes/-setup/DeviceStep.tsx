@@ -15,6 +15,7 @@ const formSchema = (t: TFunction<'common'>) =>
       .min(1)
       .refine((value) => isValidAlphanumeric(value), t('invalidAlphanumeric')),
     password: z.string().min(1),
+    timezone: z.string(),
   });
 
 type FormState = z.infer<ReturnType<typeof formSchema>>;
@@ -36,6 +37,7 @@ export const SetupDeviceStep = ({ submitForm }: DeviceStepProps) => {
     defaultValues: {
       hostname: '',
       password: '',
+      timezone: Intl.DateTimeFormat().resolvedOptions().locale,
     },
     mode: 'all',
   });

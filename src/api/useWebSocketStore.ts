@@ -75,6 +75,7 @@ export type WebSocketStore = {
   login: (req?: { username: string; password: string }) => Promise<{ result: 'success' | 'failure' }>;
   logout: () => void;
   restart: (timeout?: number) => Promise<true | false>;
+  factory: (timeout?: number) => Promise<true | false>;
   getConfigurationList: (timeout?: number) => Promise<{ configs: string[]; active: string }>;
   getCurrentConfiguration: (timeout?: number) => Promise<Configuration>;
   getSystemInfo: (timeout?: number) => Promise<SystemInfo>;
@@ -205,6 +206,11 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
     restart: () =>
       get().request({
         payload: createApiPayload({ action: 'system', method: 'reboot' }),
+        extractFn: (response) => response?.result === 0,
+      }),
+    factory: () =>
+      get().request({
+        payload: createApiPayload({ action: 'system', method: 'factory' }),
         extractFn: (response) => response?.result === 0,
       }),
     getConfigurationList: () =>

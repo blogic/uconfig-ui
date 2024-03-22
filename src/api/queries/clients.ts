@@ -5,7 +5,7 @@ import { useWebSocketStore } from 'api/useWebSocketStore';
 export const extractDisplayName = (mac: string, info: Client['info']) => {
   if (!info) return mac;
   if (info.device_name) return info.device_name;
-  if (info?.device) return `${mac} - ${info.device}`;
+  if (info?.device) return `${info.device}`;
 
   return `${mac}${info.vendor ? ` - ${info.vendor}` : ''}`;
 };
@@ -26,4 +26,5 @@ export const getClientsOptions = queryOptions({
       .sort((a, b) => a.displayName.localeCompare(b.displayName)),
   }),
   staleTime: 1000 * 60,
+  refetchInterval: 1000 * 30,
 });

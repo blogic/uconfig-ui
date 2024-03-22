@@ -25,11 +25,13 @@ import { Route as ActionsConfiguringImport } from './routes/actions/configuring'
 import { Route as ProtectedWirelessIndexImport } from './routes/protected/wireless/index'
 import { Route as ProtectedSystemIndexImport } from './routes/protected/system/index'
 import { Route as ProtectedNetworkIndexImport } from './routes/protected/network/index'
+import { Route as ProtectedClientsIndexImport } from './routes/protected/clients/index'
 import { Route as ProtectedWirelessNewSsidImport } from './routes/protected/wireless/newSsid'
 import { Route as ProtectedSystemTimezoneImport } from './routes/protected/system/timezone'
 import { Route as ProtectedSystemSystemInfoImport } from './routes/protected/system/systemInfo'
 import { Route as ProtectedSystemRestartImport } from './routes/protected/system/restart'
 import { Route as ProtectedSystemFirmwareImport } from './routes/protected/system/firmware'
+import { Route as ProtectedSystemFactoryImport } from './routes/protected/system/factory'
 import { Route as ProtectedNetworkServicesImport } from './routes/protected/network/services'
 import { Route as ProtectedNetworkIpv6Import } from './routes/protected/network/ipv6'
 import { Route as ProtectedNetworkIpv4Import } from './routes/protected/network/ipv4'
@@ -111,6 +113,11 @@ const ProtectedNetworkIndexRoute = ProtectedNetworkIndexImport.update({
   getParentRoute: () => ProtectedNetworkRoute,
 } as any)
 
+const ProtectedClientsIndexRoute = ProtectedClientsIndexImport.update({
+  path: '/clients/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+
 const ProtectedWirelessNewSsidRoute = ProtectedWirelessNewSsidImport.update({
   path: '/newSsid',
   getParentRoute: () => ProtectedWirelessRoute,
@@ -133,6 +140,11 @@ const ProtectedSystemRestartRoute = ProtectedSystemRestartImport.update({
 
 const ProtectedSystemFirmwareRoute = ProtectedSystemFirmwareImport.update({
   path: '/firmware',
+  getParentRoute: () => ProtectedSystemRoute,
+} as any)
+
+const ProtectedSystemFactoryRoute = ProtectedSystemFactoryImport.update({
+  path: '/factory',
   getParentRoute: () => ProtectedSystemRoute,
 } as any)
 
@@ -246,6 +258,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedNetworkServicesImport
       parentRoute: typeof ProtectedNetworkImport
     }
+    '/protected/system/factory': {
+      preLoaderRoute: typeof ProtectedSystemFactoryImport
+      parentRoute: typeof ProtectedSystemImport
+    }
     '/protected/system/firmware': {
       preLoaderRoute: typeof ProtectedSystemFirmwareImport
       parentRoute: typeof ProtectedSystemImport
@@ -265,6 +281,10 @@ declare module '@tanstack/react-router' {
     '/protected/wireless/newSsid': {
       preLoaderRoute: typeof ProtectedWirelessNewSsidImport
       parentRoute: typeof ProtectedWirelessImport
+    }
+    '/protected/clients/': {
+      preLoaderRoute: typeof ProtectedClientsIndexImport
+      parentRoute: typeof ProtectedImport
     }
     '/protected/network/': {
       preLoaderRoute: typeof ProtectedNetworkIndexImport
@@ -312,6 +332,7 @@ export const routeTree = rootRoute.addChildren([
       ProtectedNetworkIndexRoute,
     ]),
     ProtectedSystemRoute.addChildren([
+      ProtectedSystemFactoryRoute,
       ProtectedSystemFirmwareRoute.addChildren([
         ProtectedSystemFirmwareUpgradeRoute,
         ProtectedSystemFirmwareIndexRoute,
@@ -329,6 +350,7 @@ export const routeTree = rootRoute.addChildren([
     ]),
     ProtectedIndexRoute,
     ProtectedClientsMacAddressRoute,
+    ProtectedClientsIndexRoute,
   ]),
   SetupRoute,
 ])
