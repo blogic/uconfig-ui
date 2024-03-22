@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { useWebSocketStore } from 'api/useWebSocketStore';
 import { Button } from 'components/Button';
 import { ThemeSelector } from 'components/ThemeSelector';
+import { LanguageSelector } from 'components/LanguageSelector';
 
 const formSchema = z.object({
   username: z.string().min(1),
@@ -148,7 +149,8 @@ const Component = () => {
           </form>
         </div>
       </div>
-      <div className="absolute right-4 top-4">
+      <div className="absolute right-4 top-4 z-50 flex">
+        <LanguageSelector />
         <ThemeSelector />
       </div>
     </>

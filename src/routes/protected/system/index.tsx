@@ -88,36 +88,40 @@ const Component = () => {
             className="rounded-t-none"
           />
         </div>
-        <NavigationTile
-          title={
-            <div className="flex items-center">
-              <Heading size="md">{t('restart')}</Heading>
-              <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
-            </div>
-          }
-          description=""
-          onClick={() => {
-            navigate({
-              from: Route.fullPath,
-              to: './restart',
-            });
-          }}
-        />
-        <NavigationTile
-          title={
-            <div className="flex items-center">
-              <Heading size="md">{t('factory')}</Heading>
-              <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
-            </div>
-          }
-          description=""
-          onClick={() => {
-            navigate({
-              from: Route.fullPath,
-              to: './factory',
-            });
-          }}
-        />
+        <div>
+          <NavigationTile
+            title={
+              <div className="flex items-center">
+                <Heading size="md">{t('restart')}</Heading>
+                <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
+              </div>
+            }
+            description=""
+            onClick={() => {
+              navigate({
+                from: Route.fullPath,
+                to: './restart',
+              });
+            }}
+            className="rounded-b-none"
+          />
+          <NavigationTile
+            title={
+              <div className="flex items-center">
+                <Heading size="md">{t('factory')}</Heading>
+                <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
+              </div>
+            }
+            description=""
+            onClick={() => {
+              navigate({
+                from: Route.fullPath,
+                to: './factory',
+              });
+            }}
+            className="rounded-t-none"
+          />
+        </div>
         <div className="text-center">
           <Text variant="explanation">
             {t('appVersion')}: {__APP_VERSION__}
