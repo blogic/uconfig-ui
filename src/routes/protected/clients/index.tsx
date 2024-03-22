@@ -6,7 +6,6 @@ import { Clients } from '../-index/Clients';
 const Component = () => {
   const { t } = useTranslation('clients');
 
-
   return (
     <>
       <PageTitleBar title={t('title')} />

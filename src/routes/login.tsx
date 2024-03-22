@@ -7,8 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { useWebSocketStore } from 'api/useWebSocketStore';
 import { Button } from 'components/Button';
-import { ThemeSelector } from 'components/ThemeSelector';
 import { LanguageSelector } from 'components/LanguageSelector';
+import { ThemeSelector } from 'components/ThemeSelector';
 
 const formSchema = z.object({
   username: z.string().min(1),
@@ -25,7 +25,6 @@ const Component = () => {
     login: state.login,
     status: state.status,
   }));
-  const search = Route.useSearch();
   const {
     register,
     handleSubmit,
@@ -64,17 +63,14 @@ const Component = () => {
   const [isPasswordHidden, setIsPasswordHidden] = React.useState(true);
 
   React.useEffect(() => {
-    if (status === 'authorized') {
-      router.invalidate();
-
-      if (search.redirect) {
-        router.history.push(search.redirect);
-      } else {
-        router.navigate({ to: '/protected/' });
-      }
-    } else if (status === 'setup-required') {
-      router.navigate({ to: '/setup' });
-    }
+    // if (status === 'authorized') {
+    //   router.invalidate();
+    //   if (search.redirect) {
+    //     router.history.push(search.redirect);
+    //   } else {
+    //     router.navigate({ to: '/protected/' });
+    //   }
+    // }
   }, [status]);
 
   React.useEffect(() => {

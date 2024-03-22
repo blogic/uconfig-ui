@@ -26,7 +26,6 @@ const Component = () => {
       <PageTitleBar title={t('title')} />
       <div className="space-y-4">
         <div>
-         
           <NavigationTile
             title={t('boardInfo')}
             description={boardInfo.model}
@@ -38,13 +37,9 @@ const Component = () => {
             }}
             className="rounded-b-none"
           />
-          <InformationTile title={t('hostname')}
-            description={getInfo.data.hostname}
-            className="rounded-t-none"
-          />
-
+          <InformationTile title={t('hostname')} description={getInfo.data.hostname} className="rounded-t-none" />
         </div>
-       { /* <div>
+        {/* <div>
           <InformationTile
             title={
               <div className="flex items-center">
@@ -84,16 +79,16 @@ const Component = () => {
             className="rounded-t-none"
           />
         </div>
-          */ }
+          */}
         <NavigationTile
-            title={t('firmwareVersion')}
-            description={boardInfo.release.description}
-            onClick={() => {
-              navigate({
-                from: Route.fullPath,
-                to: './firmware/',
-              });
-            }}
+          title={t('firmwareVersion')}
+          description={boardInfo.release.description}
+          onClick={() => {
+            navigate({
+              from: Route.fullPath,
+              to: './firmware/',
+            });
+          }}
         />
         <div>
           <NavigationTile

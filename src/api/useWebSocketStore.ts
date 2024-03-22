@@ -89,7 +89,9 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
   const ws = new ReconnectingWebSocket({ url: import.meta.env.VITE_WS_URL });
 
   ws.onopen = () => {
-    get().setStatus('connected');
+    if (!WEBSOCKET_PENDING_ACTION_STATUSES.includes(get().status)) {
+      get().setStatus('connected');
+    }
     const storedInformation = getStoredLoginInfo();
 
     if (storedInformation) get().login(storedInformation);

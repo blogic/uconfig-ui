@@ -60,7 +60,7 @@ const Component = () => {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img className="mx-auto h-20 w-auto" src="/OpenWrt_Logo.png" alt="OpenWrt" />
         </div>
-        <div className="mt-10 sm:mx-auto sm:max-w-lg">
+        <div className="mt-10 sm:mx-auto sm:w-[500px]">
           <ol className="flex w-full items-center justify-center space-x-4 sm:space-x-8">
             {STEPS.map((s) => (
               <li

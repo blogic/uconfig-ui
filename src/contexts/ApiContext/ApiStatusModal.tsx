@@ -22,15 +22,6 @@ export const ApiStatusModal = () => {
     debounceChange(wsStatus);
   }, [wsStatus, debounceChange]);
 
-  if (debouncedStatus === 'connecting')
-    return (
-      <Modal title={t('connecting')} isOpen onClose={() => {}}>
-        <div className="flex h-20 w-full flex-col items-center justify-center">
-          <Spinner className="h-12 w-12" />
-        </div>
-      </Modal>
-    );
-
   if (debouncedStatus === 'error')
     return (
       <Modal title={t('error')} isOpen onClose={() => {}}>

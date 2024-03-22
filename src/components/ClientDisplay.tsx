@@ -1,5 +1,22 @@
 import { HTMLAttributes } from 'react';
-import { ArrowFatDown, ArrowFatUp, CaretRight, Globe, WifiHigh, WifiLow, WifiMedium, Printer, Laptop, SpeakerHifi, TelevisionSimple, Desktop, GameController, AndroidLogo, AppleLogo, WindowsLogo } from '@phosphor-icons/react';
+import {
+  ArrowFatDown,
+  ArrowFatUp,
+  CaretRight,
+  Globe,
+  WifiHigh,
+  WifiLow,
+  WifiMedium,
+  Printer,
+  Laptop,
+  SpeakerHifi,
+  TelevisionSimple,
+  Desktop,
+  GameController,
+  AndroidLogo,
+  AppleLogo,
+  WindowsLogo,
+} from '@phosphor-icons/react';
 import clsx from 'clsx';
 import { TFunction } from 'i18next';
 import { useTranslation } from 'react-i18next';
@@ -10,8 +27,7 @@ import { byteToString } from 'utils/strings';
 
 const ICON_CLASSES =
   'absolute left-4 top-1/2 h-6 w-6 -translate-y-1/2 transform text-primary-500 dark:text-primary-200';
-const SIGNAL_CLASSES =
-  'text-primary-500 dark:text-primary-200';
+const SIGNAL_CLASSES = 'text-primary-500 dark:text-primary-200';
 
 const signalToIcon = (signal: number) => {
   if (signal > -50) {
@@ -23,7 +39,7 @@ const signalToIcon = (signal: number) => {
   return <WifiLow className={ICON_CLASSES} />;
 };
 
-const infoToIcon = (info: Client["info"]) => {
+const infoToIcon = (info: Client['info']) => {
   switch (info?.class?.toLowerCase()) {
     case 'speaker':
       return <SpeakerHifi weight="fill" className={ICON_CLASSES} />;
@@ -60,9 +76,7 @@ const dataDisplay = (t: TFunction<'common'>, wifi: Client['wifi']) => {
 
   return (
     <>
-      <Tooltip label={t('signal')}>
-      {signalToIcon(wifi.signal)}
-      </Tooltip>
+      <Tooltip label={t('signal')}>{signalToIcon(wifi.signal)}</Tooltip>
       <Tooltip label={t('download')}>
         <p className="flex items-center font-light dark:text-white">
           <ArrowFatDown weight="duotone" className=" mr-1 text-tertiary-400 dark:text-tertiary-500" />
@@ -100,9 +114,7 @@ export const ClientDisplay = ({ client: { info, wifi }, className, displayName, 
       {infoToIcon(info)}
       <div className="ml-10">
         <Heading size="md">{displayName}</Heading>
-        <div className="flex items-center space-x-3">
-          {dataDisplay(t, wifi)}
-        </div>
+        <div className="flex items-center space-x-3">{dataDisplay(t, wifi)}</div>
       </div>
       <CaretRight className=" absolute right-4 top-1/2 -translate-y-1/2 transform dark:text-white" />
     </div>

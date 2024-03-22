@@ -17,33 +17,32 @@ export const Clients = () => {
     }
     let compare = score(b) - score(a);
     if (compare) return compare;
-    return a.displayName.localeCompare(b.displayName); 
+    return a.displayName.localeCompare(b.displayName);
   });
 
   return (
-        <>
-          <div className="flex items-center">
-          </div>
-          <div className="max-h-96 overflow-y-auto">
-            {Clients.map(({ displayName, mac, client }, i) => (
-              <ClientDisplay
-                key={mac}
-                client={client}
-                displayName={displayName}
-                onClick={() =>
-                  navigate({
-                    to: '/protected/clients/$macAddress',
-                        params: { macAddress: mac },
-                    })
-                }
-                className={clsx(
-                  i === 0 && 'rounded-b-none',
-                  i === Clients.length - 1 && 'rounded-t-none',
-                  i !== 0 && i !== Clients.length - 1 && 'rounded-none',
-                )}
-              />
-            ))}
-          </div> 
-        </>
+    <>
+      <div className="flex items-center"></div>
+      <div className="max-h-96 overflow-y-auto">
+        {Clients.map(({ displayName, mac, client }, i) => (
+          <ClientDisplay
+            key={mac}
+            client={client}
+            displayName={displayName}
+            onClick={() =>
+              navigate({
+                to: '/protected/clients/$macAddress',
+                params: { macAddress: mac },
+              })
+            }
+            className={clsx(
+              i === 0 && 'rounded-b-none',
+              i === Clients.length - 1 && 'rounded-t-none',
+              i !== 0 && i !== Clients.length - 1 && 'rounded-none',
+            )}
+          />
+        ))}
+      </div>
+    </>
   );
 };

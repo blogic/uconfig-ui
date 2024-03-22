@@ -1,7 +1,7 @@
 export type Client = {
   dev: string;
   info?: {
-    os?: string,
+    os?: string;
     device_name?: string;
     vendor?: string;
     device?: string;

@@ -21,6 +21,7 @@ import { Route as ProtectedIndexImport } from './routes/protected/index'
 import { Route as ProtectedWirelessImport } from './routes/protected/wireless'
 import { Route as ProtectedSystemImport } from './routes/protected/system'
 import { Route as ProtectedNetworkImport } from './routes/protected/network'
+import { Route as ActionsConnectingImport } from './routes/actions/connecting'
 import { Route as ActionsConfiguringImport } from './routes/actions/configuring'
 import { Route as ProtectedWirelessIndexImport } from './routes/protected/wireless/index'
 import { Route as ProtectedSystemIndexImport } from './routes/protected/system/index'
@@ -30,6 +31,7 @@ import { Route as ProtectedWirelessNewSsidImport } from './routes/protected/wire
 import { Route as ProtectedSystemTimezoneImport } from './routes/protected/system/timezone'
 import { Route as ProtectedSystemSystemInfoImport } from './routes/protected/system/systemInfo'
 import { Route as ProtectedSystemRestartImport } from './routes/protected/system/restart'
+import { Route as ProtectedSystemHostnameImport } from './routes/protected/system/hostname'
 import { Route as ProtectedSystemFirmwareImport } from './routes/protected/system/firmware'
 import { Route as ProtectedSystemFactoryImport } from './routes/protected/system/factory'
 import { Route as ProtectedNetworkServicesImport } from './routes/protected/network/services'
@@ -93,6 +95,11 @@ const ProtectedNetworkRoute = ProtectedNetworkImport.update({
   getParentRoute: () => ProtectedRoute,
 } as any)
 
+const ActionsConnectingRoute = ActionsConnectingImport.update({
+  path: '/connecting',
+  getParentRoute: () => ActionsRoute,
+} as any)
+
 const ActionsConfiguringRoute = ActionsConfiguringImport.update({
   path: '/configuring',
   getParentRoute: () => ActionsRoute,
@@ -135,6 +142,11 @@ const ProtectedSystemSystemInfoRoute = ProtectedSystemSystemInfoImport.update({
 
 const ProtectedSystemRestartRoute = ProtectedSystemRestartImport.update({
   path: '/restart',
+  getParentRoute: () => ProtectedSystemRoute,
+} as any)
+
+const ProtectedSystemHostnameRoute = ProtectedSystemHostnameImport.update({
+  path: '/hostname',
   getParentRoute: () => ProtectedSystemRoute,
 } as any)
 
@@ -226,6 +238,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ActionsConfiguringImport
       parentRoute: typeof ActionsImport
     }
+    '/actions/connecting': {
+      preLoaderRoute: typeof ActionsConnectingImport
+      parentRoute: typeof ActionsImport
+    }
     '/protected/network': {
       preLoaderRoute: typeof ProtectedNetworkImport
       parentRoute: typeof ProtectedImport
@@ -264,6 +280,10 @@ declare module '@tanstack/react-router' {
     }
     '/protected/system/firmware': {
       preLoaderRoute: typeof ProtectedSystemFirmwareImport
+      parentRoute: typeof ProtectedSystemImport
+    }
+    '/protected/system/hostname': {
+      preLoaderRoute: typeof ProtectedSystemHostnameImport
       parentRoute: typeof ProtectedSystemImport
     }
     '/protected/system/restart': {
@@ -321,7 +341,7 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  ActionsRoute.addChildren([ActionsConfiguringRoute]),
+  ActionsRoute.addChildren([ActionsConfiguringRoute, ActionsConnectingRoute]),
   LoginRoute,
   LogoutRoute,
   ProtectedRoute.addChildren([
@@ -337,6 +357,7 @@ export const routeTree = rootRoute.addChildren([
         ProtectedSystemFirmwareUpgradeRoute,
         ProtectedSystemFirmwareIndexRoute,
       ]),
+      ProtectedSystemHostnameRoute,
       ProtectedSystemRestartRoute,
       ProtectedSystemSystemInfoRoute,
       ProtectedSystemTimezoneRoute,
