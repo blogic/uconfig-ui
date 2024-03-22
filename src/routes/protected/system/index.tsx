@@ -1,9 +1,9 @@
-import { Brain, Clock, Cpu, Power } from '@phosphor-icons/react';
+import { /*Brain, Clock, Cpu, */ Power, Factory } from '@phosphor-icons/react';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { getBoardOptions } from 'api/queries/board';
-import { getSystemInfoOptions } from 'api/queries/systemInfo';
+//import { getSystemInfoOptions } from 'api/queries/systemInfo';
 import { Heading } from 'components/Heading';
 import { InformationTile } from 'components/InformationTile';
 import { NavigationTile } from 'components/NavigationTile';
@@ -12,19 +12,39 @@ import { PageTitleBar } from 'layout/PageTitleBar';
 
 const Component = () => {
   const { t } = useTranslation('system');
-  const { t: tHome } = useTranslation('home');
+  //const { t: tHome } = useTranslation('home');
   const navigate = useNavigate();
-  const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions);
+  //const { data: systemInfo } = useSuspenseQuery(getSystemInfoOptions);
   const { data: boardInfo } = useSuspenseQuery(getBoardOptions);
+  const getInfo = useSuspenseQuery(getBoardOptions);
 
-  const memoryUsedPct =
-    Math.round(((systemInfo.memory.total - systemInfo.memory.available) / systemInfo.memory.total) * 100 * 100) / 100;
+  /*const memoryUsedPct =
+    Math.round(((systemInfo.memory.total - systemInfo.memory.available) / systemInfo.memory.total) * 100 * 100) / 100;*/
 
   return (
     <>
       <PageTitleBar title={t('title')} />
       <div className="space-y-4">
         <div>
+         
+          <NavigationTile
+            title={t('boardInfo')}
+            description={boardInfo.model}
+            onClick={() => {
+              navigate({
+                from: Route.fullPath,
+                to: './systemInfo',
+              });
+            }}
+            className="rounded-b-none"
+          />
+          <InformationTile title={t('hostname')}
+            description={getInfo.data.hostname}
+            className="rounded-t-none"
+          />
+
+        </div>
+       { /* <div>
           <InformationTile
             title={
               <div className="flex items-center">
@@ -36,7 +56,7 @@ const Component = () => {
             className="rounded-b-none"
           />
 
-          <InformationTile
+         <InformationTile
             title={
               <div className="flex items-center">
                 <Heading size="md">{t('load')}</Heading>
@@ -64,8 +84,8 @@ const Component = () => {
             className="rounded-t-none"
           />
         </div>
-        <div>
-          <NavigationTile
+          */ }
+        <NavigationTile
             title={t('firmwareVersion')}
             description={boardInfo.release.description}
             onClick={() => {
@@ -74,26 +94,13 @@ const Component = () => {
                 to: './firmware/',
               });
             }}
-            className="rounded-b-none"
-          />
-          <NavigationTile
-            title={t('boardInfo')}
-            description={boardInfo.model}
-            onClick={() => {
-              navigate({
-                from: Route.fullPath,
-                to: './systemInfo',
-              });
-            }}
-            className="rounded-t-none"
-          />
-        </div>
+        />
         <div>
           <NavigationTile
             title={
               <div className="flex items-center">
-                <Heading size="md">{t('restart')}</Heading>
                 <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
+                <Heading size="md">{t('restart')}</Heading>
               </div>
             }
             description=""
@@ -108,8 +115,8 @@ const Component = () => {
           <NavigationTile
             title={
               <div className="flex items-center">
+                <Factory className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
                 <Heading size="md">{t('factory')}</Heading>
-                <Power className="ml-1 mt-0.5 h-6 w-6 text-success-500 dark:text-success-300" weight="fill" />
               </div>
             }
             description=""
