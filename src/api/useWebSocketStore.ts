@@ -23,6 +23,7 @@ const ACCEPTED_STATUSES = [
   'error',
   're-configuring',
   'rebooting',
+  'ping',
 ] as const;
 
 export type WebSocketApiStatus = (typeof ACCEPTED_STATUSES)[number];
@@ -102,7 +103,9 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
     try {
       const { callbacksToRemove, newStatus } = handleWebSocketMessage(event, ws, get().eventListeners);
 
-      if (newStatus) {
+      if (newStatus == 'ping')
+        ws.pong();
+      else if (newStatus) {
         get().setStatus(newStatus);
       }
       set((state) => ({

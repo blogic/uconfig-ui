@@ -2,6 +2,7 @@ import { createApiPayload } from './webSocketUtils';
 
 const CONNECTION_TIMEOUT = 10 * 1000;
 const PING_INTERVAL = 10 * 1000;
+const PONG_MAX_PENDING = 30 * 1000;
 const RECONNECT_INTERVAL = 1000 * 1;
 const QUEUE_MAX_SIZE = 100;
 
@@ -17,6 +18,8 @@ export default class ReconnectingWebSocket {
   private _reconnectInterval: NodeJS.Timeout | undefined = undefined;
 
   private _pingInterval: NodeJS.Timeout | undefined = undefined;
+
+  private _lastPong: number = 0;
 
   private _totalTries: number = 0;
 
@@ -48,6 +51,10 @@ export default class ReconnectingWebSocket {
     return this._webSocket?.readyState;
   }
 
+  public pong() {
+    this._lastPong = Date.now();
+  }
+
   public send(data: object) {
     if (this._webSocket && this._webSocket.readyState === 1) {
       this._webSocket.send(JSON.stringify(data));
@@ -76,6 +83,7 @@ export default class ReconnectingWebSocket {
         if (this._webSocket?.readyState === 0 && !this._lockReconnect) {
           clearInterval(this._reconnectInterval);
           clearInterval(this._pingInterval);
+          this._lastPong = 0;
         }
       }, CONNECTION_TIMEOUT);
 
@@ -83,7 +91,10 @@ export default class ReconnectingWebSocket {
 
       this._pingInterval = setInterval(() => {
         if (this._webSocket?.readyState === 1) {
-          this._webSocket?.send(JSON.stringify(createApiPayload({ action: 'event', method: 'ping' })));
+          if (this._lastPong && (Date.now() - this._lastPong > PONG_MAX_PENDING))
+            this._disconnect();
+          else
+            this._webSocket?.send(JSON.stringify(createApiPayload({ action: 'event', method: 'ping' })));
         }
       }, PING_INTERVAL);
     }
@@ -103,6 +114,7 @@ export default class ReconnectingWebSocket {
     }
     this._webSocket.close(code, reason);
     this._onclose(new CloseEvent(code.toString()));
+    this._lastPong = 0;
   }
 
   private _onopen = (event: Event) => {
