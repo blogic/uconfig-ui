@@ -22,11 +22,12 @@ const ACCEPTED_STATUSES = [
   'authorized',
   'error',
   're-configuring',
+  'rebooting',
 ] as const;
 
 export type WebSocketApiStatus = (typeof ACCEPTED_STATUSES)[number];
 
-export const WEBSOCKET_PENDING_ACTION_STATUSES = ['re-configuring'];
+export const WEBSOCKET_PENDING_ACTION_STATUSES = ['re-configuring', 'rebooting'];
 
 /** Handle raw WebSocket messages and call corresponding callback(s) */
 const handleWebSocketMessage = (event: MessageEvent, _: ReconnectingWebSocket, callbacks: WebSocketCallback[]) => {

@@ -29,6 +29,11 @@ const RootComponent = () => {
           to: '/actions/configuring',
         });
         break;
+      case 'rebooting':
+        navigateTo({
+          to: '/actions/rebooting',
+        });
+        break;
       case 'login-required':
         navigateTo({
           to: '/login',

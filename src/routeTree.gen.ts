@@ -21,6 +21,7 @@ import { Route as ProtectedIndexImport } from './routes/protected/index'
 import { Route as ProtectedWirelessImport } from './routes/protected/wireless'
 import { Route as ProtectedSystemImport } from './routes/protected/system'
 import { Route as ProtectedNetworkImport } from './routes/protected/network'
+import { Route as ActionsRebootingImport } from './routes/actions/rebooting'
 import { Route as ActionsConnectingImport } from './routes/actions/connecting'
 import { Route as ActionsConfiguringImport } from './routes/actions/configuring'
 import { Route as ProtectedWirelessIndexImport } from './routes/protected/wireless/index'
@@ -93,6 +94,11 @@ const ProtectedSystemRoute = ProtectedSystemImport.update({
 const ProtectedNetworkRoute = ProtectedNetworkImport.update({
   path: '/network',
   getParentRoute: () => ProtectedRoute,
+} as any)
+
+const ActionsRebootingRoute = ActionsRebootingImport.update({
+  path: '/rebooting',
+  getParentRoute: () => ActionsRoute,
 } as any)
 
 const ActionsConnectingRoute = ActionsConnectingImport.update({
@@ -242,6 +248,10 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ActionsConnectingImport
       parentRoute: typeof ActionsImport
     }
+    '/actions/rebooting': {
+      preLoaderRoute: typeof ActionsRebootingImport
+      parentRoute: typeof ActionsImport
+    }
     '/protected/network': {
       preLoaderRoute: typeof ProtectedNetworkImport
       parentRoute: typeof ProtectedImport
@@ -341,7 +351,11 @@ declare module '@tanstack/react-router' {
 
 export const routeTree = rootRoute.addChildren([
   IndexRoute,
-  ActionsRoute.addChildren([ActionsConfiguringRoute, ActionsConnectingRoute]),
+  ActionsRoute.addChildren([
+    ActionsConfiguringRoute,
+    ActionsConnectingRoute,
+    ActionsRebootingRoute,
+  ]),
   LoginRoute,
   LogoutRoute,
   ProtectedRoute.addChildren([
