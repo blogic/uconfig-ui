@@ -3,19 +3,6 @@ import {
   ArrowFatDown,
   ArrowFatUp,
   CaretRight,
-  Globe,
-  WifiHigh,
-  WifiLow,
-  WifiMedium,
-  Printer,
-  Laptop,
-  SpeakerHifi,
-  TelevisionSimple,
-  Desktop,
-  GameController,
-  AndroidLogo,
-  AppleLogo,
-  WindowsLogo,
 } from '@phosphor-icons/react';
 import clsx from 'clsx';
 import { TFunction } from 'i18next';
@@ -24,59 +11,24 @@ import { Heading } from './Heading';
 import { Tooltip } from './Tooltip';
 import { Client } from 'api/types/clients.types';
 import { byteToString } from 'utils/strings';
+import { ClientIcon } from 'components/ClientIcon';
+import { WiFiIcon } from 'components/WiFiIcon';
 
 const ICON_CLASSES =
   'absolute left-4 top-1/2 h-6 w-6 -translate-y-1/2 transform text-primary-500 dark:text-primary-200';
 const SIGNAL_CLASSES = 'text-primary-500 dark:text-primary-200';
-
-const signalToIcon = (signal: number) => {
-  if (signal > -50) {
-    return <WifiHigh weight="bold" className={SIGNAL_CLASSES} />;
-  }
-
-  if (signal > -90) return <WifiMedium className={ICON_CLASSES} />;
-
-  return <WifiLow className={ICON_CLASSES} />;
-};
-
-const infoToIcon = (info: Client['info']) => {
-  switch (info?.class?.toLowerCase()) {
-    case 'speaker':
-      return <SpeakerHifi weight="fill" className={ICON_CLASSES} />;
-    case 'tv':
-      return <TelevisionSimple weight="fill" className={ICON_CLASSES} />;
-    case 'pc':
-      return <Desktop weight="fill" className={ICON_CLASSES} />;
-    case 'laptop':
-      return <Laptop weight="fill" className={ICON_CLASSES} />;
-    case 'printer':
-      return <Printer weight="fill" className={ICON_CLASSES} />;
-    case 'gaming':
-      return <GameController weight="fill" className={ICON_CLASSES} />;
-  }
-  switch (info?.os?.toLowerCase()) {
-    case 'android 10':
-    case 'android 11':
-    case 'android 12':
-    case 'android 13':
-    case 'android 14':
-      return <AndroidLogo weight="fill" className={ICON_CLASSES} />;
-    case 'windows 10':
-      return <WindowsLogo weight="fill" className={ICON_CLASSES} />;
-  }
-  switch (info?.vendor?.toLowerCase()) {
-    case 'apple':
-      return <AppleLogo weight="fill" className={ICON_CLASSES} />;
-  }
-  return <Globe weight="fill" className={ICON_CLASSES} />;
-};
 
 const dataDisplay = (t: TFunction<'common'>, wifi: Client['wifi']) => {
   if (!wifi?.bytes) return null;
 
   return (
     <>
-      <Tooltip label={t('signal')}>{signalToIcon(wifi.signal)}</Tooltip>
+      <Tooltip label={t('signal')}>
+        <WiFiIcon
+          wifi={wifi}
+          className={SIGNAL_CLASSES}
+        />
+      </Tooltip>
       <Tooltip label={t('download')}>
         <p className="flex items-center font-light dark:text-white">
           <ArrowFatDown weight="duotone" className=" mr-1 text-tertiary-400 dark:text-tertiary-500" />
@@ -111,7 +63,10 @@ export const ClientDisplay = ({ client: { info, wifi }, className, displayName, 
       role="button"
       tabIndex={0}
     >
-      {infoToIcon(info)}
+      <ClientIcon
+        info={info}
+        className={ICON_CLASSES}
+      />
       <div className="ml-10">
         <Heading size="md">{displayName}</Heading>
         <div className="flex items-center space-x-3">{dataDisplay(t, wifi)}</div>
