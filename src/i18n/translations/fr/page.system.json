@@ -18,6 +18,7 @@
 	"restartWarning": "Vous êtes sur le point de redémarrer votre routeur. Cela signifie que votre réseau pourrait être indisponible pendant quelques minutes.",
 	"target": "Cible",
 	"timezone": "Fuseau horaire",
+	"timezoneExplanation": "",
 	"title": "Système",
 	"upgrade": "Améliorer",
 	"version": "Version"

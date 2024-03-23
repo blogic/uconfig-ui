@@ -18,6 +18,7 @@
 	"restartWarning": "You are about to restart your router. This will mean your network might be unavailable for a few minutes.",
 	"target": "Target",
 	"timezone": "Timezone",
+	"timezoneExplanation": "Please select the Timezone that you are located in",
 	"title": "System",
 	"upgrade": "Upgrade",
 	"version": "Version"

@@ -11,6 +11,7 @@ import { Button } from 'components/Button';
 import { SelectFormField } from 'components/Form/SelectField';
 import { TIMEZONES } from 'data/tz';
 import { PageTitleBar } from 'layout/PageTitleBar';
+import { Text } from 'components/Text';
 
 const formSchema = z.object({
   timezone: z.string(),
@@ -44,11 +45,11 @@ const Component = () => {
     // Map back form values to the configuration
     const newConfig = currentConfiguration;
 
-    if (newConfig.unit) {
-      newConfig.unit.timezone = data.timezone;
+    if (newConfig.device) {
+      newConfig.device.timezone = data.timezone;
     } else {
       // Create a new interface?
-      newConfig.unit = {
+      newConfig.device = {
         timezone: data.timezone,
       };
     }
@@ -60,11 +61,12 @@ const Component = () => {
   return (
     <>
       <PageTitleBar title={t('timezone')} />
+      <Text variant="explanation">{t('timezoneExplanation')}</Text>
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <SelectFormField<FormState>
           register={register}
           name="timezone"
-          label={t('timezone')}
+          label=''
           errors={errors}
           options={TIMEZONES}
         />
