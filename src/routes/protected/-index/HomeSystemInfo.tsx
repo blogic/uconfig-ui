@@ -48,7 +48,7 @@ export const HomeSystemInfo = () => {
         title={`${getClients.data.clientsArray.length}`}
         description={t('connections')}
         icon={<Devices className="h-6 w-6 text-black dark:text-white" />}
-        onClick={navigateToSystem}
+        onClick={() => navigate({ to: '/protected/clients' })}
       />
       <StatDisplay
         className="col-span-2 bg-secondary-300 dark:bg-secondary-500"
