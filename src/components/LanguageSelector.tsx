@@ -3,6 +3,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { Tooltip } from './Tooltip';
+import { usePreferences } from 'contexts/PreferencesContext/usePreferences';
 
 const LANGUAGE_LIST = [
   { label: 'English', value: 'en' },
@@ -10,9 +11,10 @@ const LANGUAGE_LIST = [
 ];
 export const LanguageSelector = () => {
   const { i18n } = useTranslation();
+  const { setAppLanguage } = usePreferences();
 
   return (
-    <Listbox value={i18n.language} onChange={(v) => i18n.changeLanguage(v.toLowerCase())}>
+    <Listbox value={i18n.language} onChange={(v) => { setAppLanguage(v.toLowerCase());}}>
       {({ open }) => (
         <div className="relative">
           <Tooltip label={i18n.t('common:language')} placement="bottom">
