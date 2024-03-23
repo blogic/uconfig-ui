@@ -16,24 +16,11 @@ const Component = () => {
       <PageTitleBar title={t('title')} />
       <p className="mb-4 text-sm text-gray-500 dark:text-gray-200">{t('description')}</p>
       <div className="space-y-6">
-        <NavigationTile
-          title={t('services')}
-          description={
-            currentConfiguration.interfaces.wan?.services.length
-              ? currentConfiguration.interfaces.wan.services.join(', ')
-              : t('noServices')
-          }
-          onClick={() =>
-            navigate({
-              to: '/protected/network/services',
-            })
-          }
-        />
         <div>
           <NavigationTile
             title={t('ipv4')}
             description={
-              currentConfiguration.interfaces.wan?.ipv4.addressing
+              currentConfiguration.wan?.ipv4.addressing
                 ? capitalizeFirstLetter(t('dynamic'))
                 : capitalizeFirstLetter(t('static'))
             }
@@ -47,7 +34,7 @@ const Component = () => {
           <NavigationTile
             title={t('ipv6')}
             description={
-              currentConfiguration.interfaces.wan?.ipv4.addressing
+              currentConfiguration.wan?.ipv4.addressing
                 ? capitalizeFirstLetter(t('dynamic'))
                 : capitalizeFirstLetter(t('static'))
             }

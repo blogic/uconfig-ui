@@ -7,11 +7,6 @@ export type IPv4Configuration =
       subnet: string;
       dns: string;
       gateway: string;
-      dhcp?: {
-        'lease-first': number;
-        'lease-count': number;
-        'lease-time': string;
-      };
     };
 
 export type IPv6Configuration =
@@ -33,12 +28,7 @@ export type SSIDConfiguration = {
   'bss-mode': 'ap' | 'mesh';
 };
 
-export type WiFiConfiguration = {
-  enable?: 'enable' | 'disable';
-  ssid: string;
-  security: 'max' | 'compat';
-  password: string;
-};
+
 
 export type InterfaceConfiguration = {
   role: 'upstream' | 'downstream';
@@ -66,6 +56,13 @@ export type DeviceConfiguration = {
   timezone?: string;
 };
 
+export type WiFiConfiguration = {
+      enable?: 'enable' | 'disable';
+      ssid: string;
+      security: 'max' | 'compat';
+      password: string;
+    };
+
 export type Configuration = {
   /* old */
   uuid: string;
@@ -81,6 +78,9 @@ export type Configuration = {
 
   /* new */
   device: DeviceConfiguration;
+  wan: {
+    ipv4: IPv4Configuration;
+  }
   wifi: WiFiConfiguration;
   iot: WiFiConfiguration;
   guest: WiFiConfiguration;

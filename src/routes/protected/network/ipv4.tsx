@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { getCurrentConfigurationOptions } from 'api/queries/configurations';
-import { InterfaceConfiguration } from 'api/types/configurations.types';
+import { IPv4Configuration } from 'api/types/configurations.types';
 import { Button } from 'components/Button';
 import { SelectFormField } from 'components/Form/SelectField';
 import { StringFormField } from 'components/Form/StringField';
@@ -43,15 +43,15 @@ const Component = () => {
   const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions);
 
   const defaultValues: FormState = React.useMemo(() => {
-    const wan = currentConfiguration.interfaces.wan as unknown as InterfaceConfiguration;
+    const ipv4 = currentConfiguration.wan.ipv4 as unknown as IPv4Configuration;
 
-    if (wan.ipv4.addressing === 'dynamic') return { addressing: 'dynamic' };
+    if (ipv4.addressing === 'dynamic') return { addressing: 'dynamic' };
 
     return {
-      addressing: wan.ipv4.addressing,
-      subnet: wan.ipv4.subnet,
-      gateway: wan.ipv4.gateway,
-      dns: wan.ipv4.dns,
+      addressing: ipv4.addressing,
+      subnet: ipv4.subnet,
+      gateway: ipv4.gateway,
+      dns: ipv4.dns,
     };
   }, [currentConfiguration]);
 
@@ -72,21 +72,8 @@ const Component = () => {
   useBlocker(() => window.confirm(tCommon('unsaved_changes')), isDirty);
 
   const onSubmit = (data: FormState) => {
-    // Map back form values to the configuration
-    const newConfig = currentConfiguration;
-
-    if (newConfig.interfaces.wan) {
-      newConfig.interfaces.wan.ipv4 = {
-        ...newConfig.interfaces.wan.ipv4,
-        ...data,
-      };
-    } else {
-      // Create a new interface?
-    }
-
+    const newConfig = currentConfiguration.wan.ipv4 = data;
     console.log(newConfig);
-
-    // TODO: Send the new configuration to the server
   };
 
   return (

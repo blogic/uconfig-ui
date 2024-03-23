@@ -55,7 +55,7 @@ export const SetupWanStep = ({ submitForm }: WanStepProps) => {
   const isStatic = watch('addressing') === 'static';
 
   const onSubmit = (data: FormState) => {
-    submitForm({ wan: data });
+    submitForm({ wan: { ipv4 : data }});
   };
 
   return (
