@@ -6,6 +6,7 @@
 	"good": "Bon",
 	"ip_one": "Adresse IP",
 	"ip_other": "Adresses IP",
+	"macAddress": "",
 	"noDeviceDetails": "Impossible d'obtenir plus de détails sur cet appareil",
 	"signalStrength": "Signal",
 	"weak": "Faible"

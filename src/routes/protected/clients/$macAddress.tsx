@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ArrowFatDown, ArrowFatUp, Globe, WifiHigh, WifiLow, WifiMedium, XCircle } from '@phosphor-icons/react';
+import { ArrowFatDown, ArrowFatUp, WifiHigh, WifiLow, WifiMedium, XCircle } from '@phosphor-icons/react';
 import { createFileRoute } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { TFunction } from 'i18next';
@@ -13,6 +13,7 @@ import { NavigationTile } from 'components/NavigationTile';
 import { Tooltip } from 'components/Tooltip';
 import { PageTitleBar } from 'layout/PageTitleBar';
 import { byteToString } from 'utils/strings';
+import { ClientIcon } from 'components/ClientIcon';
 
 const ICON_CLASSES = 'h-5 w-5 mr-2';
 
@@ -55,7 +56,6 @@ const Component = () => {
   const name = extractDisplayName(macAddress, client.info);
 
   const ipAddresses = [...(client.ipv4 || []), ...(client.ipv6 || [])];
-
   const deviceDetails = [];
   if (client.info?.device) {
     deviceDetails.push(client.info.device);
@@ -86,20 +86,23 @@ const Component = () => {
         title={
           <div className="flex items-center justify-center">
             {wifiConnectionIcon ?? (
-              <Globe weight="fill" className={clsx(ICON_CLASSES, 'text-primary-500 dark:text-primary-200')} />
+              <ClientIcon
+                info={client.info}
+                className={clsx(ICON_CLASSES, 'text-primary-500 dark:text-primary-200')}
+              />
             )}
             <Heading size="md">{name}</Heading>
           </div>
         }
       />
       <div className="space-y-4">
-        <div>
-          <InformationTile
-            title={tCommon('data')}
-            description={<div className="flex space-x-4">{dataDisplay(tCommon, client.wifi)}</div>}
-            className={client.wifi ? 'rounded-b-none' : ''}
-          />
-          {client.wifi ? (
+        {client.wifi ? (
+          <div>
+            <InformationTile
+              title={tCommon('data')}
+              description={<div className="flex space-x-4">{dataDisplay(tCommon, client.wifi)}</div>}
+              className={client.wifi ? 'rounded-b-none' : ''}
+            />
             <InformationTile
               title={
                 <div className="flex items-center">
@@ -110,8 +113,15 @@ const Component = () => {
               description={`${client.wifi.signal} dBm (${signalToStrength(client.wifi.signal, t)})`}
               className="rounded-t-none"
             />
-          ) : null}
-        </div>
+          </div>
+        ) : null}
+
+        {deviceDetails.length > 0 ? (
+          <InformationTile
+            title={t('deviceDetails')}
+            description={deviceDetails.length > 0 ? deviceDetails.join(', ') : t('noDeviceDetails')}
+          />
+        ): null}
         <div>
           <InformationTile
             title={t('ip', { count: ipAddresses.length })}
@@ -119,8 +129,8 @@ const Component = () => {
             className="rounded-b-none"
           />
           <InformationTile
-            title={t('deviceDetails')}
-            description={deviceDetails.length > 0 ? deviceDetails.join(', ') : t('noDeviceDetails')}
+            title={t('macAddress')}
+            description={macAddress}
             className="rounded-t-none"
           />
         </div>
