@@ -57,11 +57,12 @@ export type DeviceConfiguration = {
 };
 
 export type WiFiConfiguration = {
-      enable?: 'enable' | 'disable';
-      ssid: string;
-      security: 'max' | 'compat';
-      password: string;
-    };
+  enable?: 'enable' | 'disable';
+  ssid: string;
+  security: 'max' | 'compat';
+  password: string;
+  band: Array<'2G' | '5G' | '6G'>;
+};
 
 export type Configuration = {
   /* old */
@@ -74,14 +75,12 @@ export type Configuration = {
       port: number;
     };
   };
-  unit?: UnitConfiguration;
-
   /* new */
   device: DeviceConfiguration;
   wan: {
     ipv4: IPv4Configuration;
   }
-  wifi: WiFiConfiguration;
-  iot: WiFiConfiguration;
-  guest: WiFiConfiguration;
+  wifi: {
+    [key: string]: WiFiConfiguration;
+  }
 };

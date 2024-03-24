@@ -28,7 +28,6 @@ import { Route as ProtectedWirelessIndexImport } from './routes/protected/wirele
 import { Route as ProtectedSystemIndexImport } from './routes/protected/system/index'
 import { Route as ProtectedNetworkIndexImport } from './routes/protected/network/index'
 import { Route as ProtectedClientsIndexImport } from './routes/protected/clients/index'
-import { Route as ProtectedWirelessNewSsidImport } from './routes/protected/wireless/newSsid'
 import { Route as ProtectedSystemTimezoneImport } from './routes/protected/system/timezone'
 import { Route as ProtectedSystemSystemInfoImport } from './routes/protected/system/systemInfo'
 import { Route as ProtectedSystemRestartImport } from './routes/protected/system/restart'
@@ -39,10 +38,9 @@ import { Route as ProtectedNetworkServicesImport } from './routes/protected/netw
 import { Route as ProtectedNetworkIpv6Import } from './routes/protected/network/ipv6'
 import { Route as ProtectedNetworkIpv4Import } from './routes/protected/network/ipv4'
 import { Route as ProtectedClientsMacAddressImport } from './routes/protected/clients/$macAddress'
-import { Route as ProtectedWirelessInterfaceIdIndexImport } from './routes/protected/wireless/$interfaceId/index'
+import { Route as ProtectedWirelessSsidIndexImport } from './routes/protected/wireless/$ssid/index'
 import { Route as ProtectedSystemFirmwareIndexImport } from './routes/protected/system/firmware/index'
 import { Route as ProtectedSystemFirmwareUpgradeImport } from './routes/protected/system/firmware/upgrade'
-import { Route as ProtectedWirelessInterfaceIdSsidIndexImport } from './routes/protected/wireless/$interfaceId/$ssid/index'
 
 // Create/Update Routes
 
@@ -131,11 +129,6 @@ const ProtectedClientsIndexRoute = ProtectedClientsIndexImport.update({
   getParentRoute: () => ProtectedRoute,
 } as any)
 
-const ProtectedWirelessNewSsidRoute = ProtectedWirelessNewSsidImport.update({
-  path: '/newSsid',
-  getParentRoute: () => ProtectedWirelessRoute,
-} as any)
-
 const ProtectedSystemTimezoneRoute = ProtectedSystemTimezoneImport.update({
   path: '/timezone',
   getParentRoute: () => ProtectedSystemRoute,
@@ -188,11 +181,12 @@ const ProtectedClientsMacAddressRoute = ProtectedClientsMacAddressImport.update(
   } as any,
 )
 
-const ProtectedWirelessInterfaceIdIndexRoute =
-  ProtectedWirelessInterfaceIdIndexImport.update({
-    path: '/$interfaceId/',
+const ProtectedWirelessSsidIndexRoute = ProtectedWirelessSsidIndexImport.update(
+  {
+    path: '/$ssid/',
     getParentRoute: () => ProtectedWirelessRoute,
-  } as any)
+  } as any,
+)
 
 const ProtectedSystemFirmwareIndexRoute =
   ProtectedSystemFirmwareIndexImport.update({
@@ -204,12 +198,6 @@ const ProtectedSystemFirmwareUpgradeRoute =
   ProtectedSystemFirmwareUpgradeImport.update({
     path: '/upgrade',
     getParentRoute: () => ProtectedSystemFirmwareRoute,
-  } as any)
-
-const ProtectedWirelessInterfaceIdSsidIndexRoute =
-  ProtectedWirelessInterfaceIdSsidIndexImport.update({
-    path: '/$interfaceId/$ssid/',
-    getParentRoute: () => ProtectedWirelessRoute,
   } as any)
 
 // Populate the FileRoutesByPath interface
@@ -308,10 +296,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSystemTimezoneImport
       parentRoute: typeof ProtectedSystemImport
     }
-    '/protected/wireless/newSsid': {
-      preLoaderRoute: typeof ProtectedWirelessNewSsidImport
-      parentRoute: typeof ProtectedWirelessImport
-    }
     '/protected/clients/': {
       preLoaderRoute: typeof ProtectedClientsIndexImport
       parentRoute: typeof ProtectedImport
@@ -336,12 +320,8 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSystemFirmwareIndexImport
       parentRoute: typeof ProtectedSystemFirmwareImport
     }
-    '/protected/wireless/$interfaceId/': {
-      preLoaderRoute: typeof ProtectedWirelessInterfaceIdIndexImport
-      parentRoute: typeof ProtectedWirelessImport
-    }
-    '/protected/wireless/$interfaceId/$ssid/': {
-      preLoaderRoute: typeof ProtectedWirelessInterfaceIdSsidIndexImport
+    '/protected/wireless/$ssid/': {
+      preLoaderRoute: typeof ProtectedWirelessSsidIndexImport
       parentRoute: typeof ProtectedWirelessImport
     }
   }
@@ -378,10 +358,8 @@ export const routeTree = rootRoute.addChildren([
       ProtectedSystemIndexRoute,
     ]),
     ProtectedWirelessRoute.addChildren([
-      ProtectedWirelessNewSsidRoute,
       ProtectedWirelessIndexRoute,
-      ProtectedWirelessInterfaceIdIndexRoute,
-      ProtectedWirelessInterfaceIdSsidIndexRoute,
+      ProtectedWirelessSsidIndexRoute,
     ]),
     ProtectedIndexRoute,
     ProtectedClientsMacAddressRoute,

@@ -9,7 +9,7 @@ const Component = () => {
   const { t } = useTranslation('wireless');
   const { data: currentConfiguration } = useSuspenseQuery(getCurrentConfigurationOptions);
 
-  const ssids = Object.keys(currentConfiguration.interfaces.wan?.ssids ?? {});
+  const ssids = Object.keys(currentConfiguration.wifi ?? {});
 
   const navigate = useNavigate();
 
@@ -19,76 +19,30 @@ const Component = () => {
       <p className="mb-4 text-sm text-gray-500 dark:text-gray-200">{t('description')}</p>
       <div className="space-y-6">
         <div>
-          <NavigationTile
-            title="AOW_Public"
-            description="2G, 5G"
-            onClick={() =>
-              navigate({
-                to: '/protected/wireless/$interfaceId/$ssid',
-                params: {
-                  interfaceId: 'wan',
-                  ssid: 'AOW_Public',
-                },
-              })
-            }
-            className="rounded-b-none"
-          />
-          <NavigationTile
-            title="AOW_Private"
-            description="2G, 5G"
-            onClick={() =>
-              navigate({
-                to: '/protected/wireless/$interfaceId/$ssid',
-                params: {
-                  interfaceId: 'wan',
-                  ssid: 'AOW_Private',
-                },
-              })
-            }
-            className="rounded-none"
-          />
-          <NavigationTile
-            title="CoolHouse (Guest)"
-            description="2G"
-            onClick={() => {
-              navigate({
-                to: '/protected/wireless/$interfaceId/$ssid',
-                params: {
-                  interfaceId: 'wan',
-                  ssid: 'CoolHouse (Guest)',
-                },
-              });
-            }}
-            className="rounded-t-none"
-          />
           {ssids.map((ssid, i) => {
+            let className = 'rounded-none';
             if (i === 0)
-              return (
-                <NavigationTile key={ssid} title={ssid} description="" onClick={() => {}} className="rounded-b-none" />
-              );
-
-            if (i === ssids.length - 1)
-              return (
-                <NavigationTile key={ssid} title={ssid} description="" onClick={() => {}} className="rounded-t-none" />
-              );
+              className = 'rounded-b-none';  
+            else if (i === ssids.length - 1)
+              className = 'rounded-t-none';
 
             return (
-              <NavigationTile key={ssid} title={ssid} description="" onClick={() => {}} className="rounded-none" />
+              <NavigationTile
+                key={ssid}
+                title={t(ssid)}
+                description={currentConfiguration.wifi?.[ssid]?.ssid || ''}
+                onClick={() => {
+                  navigate({
+                    to: '/protected/wireless/$ssid',
+                    params: {
+                      //ssid: {ssid},
+                      ssid,
+                    },
+                  });
+                }}
+                className={className} />
             );
           })}
-        </div>
-        <div>
-          <NavigationTile
-            title={t('createNew')}
-            description=""
-            onClick={() =>
-              navigate({
-                to: '/protected/wireless/newSsid',
-              })
-            }
-            className="rounded-b-none"
-          />
-          <NavigationTile title={t('createNewGuest')} description="" onClick={() => {}} className="rounded-t-none" />
         </div>
       </div>
     </>

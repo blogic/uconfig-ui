@@ -12,6 +12,20 @@ export const SetupConfirmStep = ({ state }: ConfirmStepProps) => {
   const finishWizard = useFinishWizard();
 
   const handleSubmit = () => {
+    state = {
+      "device": {
+        "hostname": "OpenWrt",
+        "timezone": "Europe/Berlin"
+      }, 
+      "wan": {
+        "ipv4": { "addressing": "dynamic" }
+      },
+      "wifi": {
+        main: { "ssid": "OpenWrt", "security": "max", "password": "aaaaaaaa" },
+        "guest": { "enable": "enable", "password": "aaaaaaaa" },
+        "iot": { "enable": "enable", "password": "aaaaaaaa" }
+      }
+    };
     finishWizard.mutate(state);
   };
 
