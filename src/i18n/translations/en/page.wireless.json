@@ -1,4 +1,10 @@
 {
+	"2G": "2GHz",
+	"5G": "5GHz",
+	"6G": "6GHz",
+	"automatic": "Automatic",
+	"bandExplanation": "Here you can configure the WiFi radios",
+	"channel": "Operation Channel",
 	"compatibilitySecurity": "Prioritize Compatibility",
 	"compatibilitySecurityExplanation": "Use security algorithms that are compatible with most devices",
 	"createNew": "Create Network",
@@ -9,6 +15,7 @@
 	"guest": "Guest WiFi",
 	"iot": "IoT WiFi",
 	"main": "Main WiFi",
+	"manual": "Manual",
 	"maxSecurity": "Maximum Security",
 	"maxSecurityExplanation": "Use the latest and most secure encryption. Only recent devices will be able to connect",
 	"password": "Password",

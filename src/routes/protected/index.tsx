@@ -3,6 +3,8 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { HomeSystemInfo } from './-index/HomeSystemInfo';
 import { NavigationButton, NavigationButtonProps } from 'components/NavigationButton';
+import { PinPadKey } from 'components/PinPadKey';
+import { PinPad } from 'components/PinPad';
 
 const Component = () => {
   const { t } = useTranslation('wireless');
@@ -33,11 +35,15 @@ const Component = () => {
     },
   ] as NavigationButtonProps[];
 
+  /*<PinPadKey value={1} onClick={(value:number) => alert(value)}/>
+      <PinPad/>*/
   return (
     <>
       <div className="space-y-4">
         <HomeSystemInfo />
       </div>
+      
+
       <div className="mt-8 flex items-center justify-center space-x-8">
         {routes.map((route) => (
           <NavigationButton key={route.label} {...route} />

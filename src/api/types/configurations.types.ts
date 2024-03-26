@@ -64,6 +64,12 @@ export type WiFiConfiguration = {
   band: Array<'2G' | '5G' | '6G'>;
 };
 
+export type BandConfiguration = {
+  mode?: 'automatic' | 'manual';
+  channel: string;
+  bandwidth: 'max' | 'compat';
+};
+
 export type Configuration = {
   /* old */
   uuid: string;
@@ -82,5 +88,8 @@ export type Configuration = {
   }
   wifi: {
     [key: string]: WiFiConfiguration;
+  }
+  band: {
+    [key: string]: BandConfiguration;
   }
 };

@@ -6,7 +6,7 @@ type PageTitleBarProps = {
 };
 
 export const PageTitleBar = ({ title }: PageTitleBarProps) => (
-  <div className="relative mb-4 flex h-[48px] items-center justify-center text-center">
+  <div className="relative mb-4 flex h-[62px] items-center justify-center text-center align-middle">
     <GoBackButton />
     {typeof title === 'string' ? <Heading size="lg">{title}</Heading> : title}
   </div>

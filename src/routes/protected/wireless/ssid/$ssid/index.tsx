@@ -9,13 +9,12 @@ import { Button } from 'components/Button';
 import { CheckboxesFormField } from 'components/Form/CheckboxesField';
 import { SelectFormField } from 'components/Form/SelectField';
 import { StringFormField } from 'components/Form/StringField';
-import { ToggleFormField } from 'components/Form/ToggleField';
 import { Text } from 'components/Text';
 import { PageTitleBar } from 'layout/PageTitleBar';
 
 const formSchema = z.discriminatedUnion('enable', [
   z.object({
-    enable: z.literal('disable'),
+   enable: z.literal('disable'),
   }),
   z.object({
     enable: z.literal('enable'),
@@ -56,11 +55,14 @@ const Component = () => {
 
   const onSubmit = (data: FormState) => {
     console.log(data);
-
-    // TODO: if all the information changes -> logout user and tell them to reconnect to network
   };
-/*
-        <SelectFormField<FormState>
+
+  return (
+    <>
+      <PageTitleBar title={t(ssid)} />
+      <Text variant="explanation">{t('ssidExplanation')}</Text>
+      <form className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <SelectFormField<FormState>
           register={register}
           name="enable"
           label=""
@@ -69,18 +71,8 @@ const Component = () => {
             { label: tCommon('disable'), value: 'disable' },
             { label: tCommon('enable'), value: 'enable' },
           ]}
-        /> */
-  return (
-    <>
-      <PageTitleBar title={t(ssid)} />
-      <Text variant="explanation">{t('ssidExplanation')}</Text>
-      <form className="mt-4 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <ToggleFormField<FormState>
-          register={register}
-          name="enable"
-          label={tCommon('enable')}
-          errors={errors}
-        />
+        /> 
+        
         {isEnabled ? (
           <div>
             <StringFormField<FormState>
@@ -147,9 +139,9 @@ const Component = () => {
   );
 };
 
-export const Route = createFileRoute('/protected/wireless/$ssid/')({
+export const Route = createFileRoute('/protected/wireless/ssid/$ssid/')({
   parseParams: (params) => ({
-    ssid: z.string().parse(params.ssid),
+    ssid: z.enum(['main', 'guest', 'iot']).parse(params.ssid),
   }),
   stringifyParams: ({ ssid }) => ({ ssid }),
   loader: async ({ context, params }) => {

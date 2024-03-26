@@ -4,6 +4,8 @@ import { Clients } from './types/clients.types';
 import { Configuration } from './types/configurations.types';
 import { Ports } from './types/ports.types';
 import { SystemInfo } from './types/systemInfo.types';
+import { Capabilities } from './types/capabilities.types';
+
 import {
   WebSocketCallback,
   createApiPayload,
@@ -84,6 +86,7 @@ export type WebSocketStore = {
   getBoard: (timeout?: number) => Promise<Board>;
   getPorts: (timeout?: number) => Promise<Ports>;
   getClients: (timeout?: number) => Promise<Clients>;
+  getCapabilities: (timeout?: number) => Promise<Capabilities>;
   finishWizard: (wizardResult: object) => Promise<boolean>;
 };
 
@@ -246,6 +249,11 @@ export const useWebSocketStore = create<WebSocketStore>((set, get) => {
     getBoard: () =>
       get().request({
         payload: createApiPayload({ action: 'system', method: 'board' }),
+        extractFn: (response) => response?.params,
+      }),
+    getCapabilities: () =>
+      get().request({
+        payload: createApiPayload({ action: 'get', method: 'capabilities' }),
         extractFn: (response) => response?.params,
       }),
     getPorts: () =>

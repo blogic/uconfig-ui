@@ -1,4 +1,10 @@
 {
+	"2G": "",
+	"5G": "",
+	"6G": "",
+	"automatic": "",
+	"bandExplanation": "",
+	"channel": "",
 	"compatibilitySecurity": "Prioriser la compatibilité",
 	"compatibilitySecurityExplanation": "Utilisez des algorithmes de sécurité compatibles avec la plupart des appareils",
 	"createNew": "Créer un réseau",
@@ -9,6 +15,7 @@
 	"guest": "",
 	"iot": "",
 	"main": "",
+	"manual": "",
 	"maxSecurity": "Sécurité maximale",
 	"maxSecurityExplanation": "Utilisez le cryptage le plus récent et le plus sécurisé. Seuls les appareils récents pourront se connecter",
 	"password": "Mot de passe",
