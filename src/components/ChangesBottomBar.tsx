@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from './Button';
 
 export type ChangesBottomBarProps = {
-  onSave: () => void;
+  onSave?: () => void;
   onReset: () => void;
 };
 
@@ -14,7 +14,7 @@ export const ChangesBottomBar = ({ onSave, onReset }: ChangesBottomBarProps) => 
       <Button buttonType="button" colorScheme="gray" className="w-max" onClick={onReset}>
         {t('reset')}
       </Button>
-      <Button buttonType="button" className="w-max" onClick={onSave}>
+      <Button buttonType={onSave ? 'button' : 'submit'} className="w-max" onClick={onSave}>
         {t('save')}
       </Button>
     </div>
