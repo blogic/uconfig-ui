@@ -7,10 +7,11 @@ import { useWebSocketStore } from 'api/useWebSocketStore';
 import { LanguageSelector } from 'components/LanguageSelector';
 import { LogoutButton } from 'components/LogoutButton';
 import { ThemeSelector } from 'components/ThemeSelector';
+import { ConfigurationProvider } from 'contexts/ConfigurationProvider/ConfigurationContext';
 import { MainPageContainer } from 'layout/MainPageContainer';
 
 const Component = () => (
-  <>
+  <ConfigurationProvider>
     <div className="absolute left-4 top-4 z-50 flex">
       <Link to="/protected/">
         <img className="h-8 w-auto" src="/OpenWrt_Logo.png" alt="OpenWrt" />
@@ -24,7 +25,7 @@ const Component = () => (
     <MainPageContainer>
       <Outlet />
     </MainPageContainer>
-  </>
+  </ConfigurationProvider>
 );
 
 export const Route = createFileRoute('/protected')({

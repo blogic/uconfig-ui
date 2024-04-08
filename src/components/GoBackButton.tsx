@@ -16,6 +16,7 @@ export const GoBackButton = () => {
       icon={<ArrowCircleLeft weight="fill" size={48} className="text-primary-500 dark:text-primary-300" />}
       tooltipClassName="absolute left-0 top-0 w-max"
       tooltipPlacement="bottom"
+      className=" h-max w-max"
     />
   );
 };
